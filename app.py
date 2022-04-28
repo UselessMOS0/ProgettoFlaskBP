@@ -35,13 +35,11 @@ def registrazione():
     if request.method == 'GET':
         return render_template("registrazione.html")
     else:
+        global credenziali
         username = request.form['Username']
         password = request.form['Password']
-        print(username,password)
         utente = {"Username": username,"Password":password}
-        print(utente)
-        print(credenziali)
-        credenziali.append(utente,ignore_index=True)
+        credenziali = credenziali.append(utente,ignore_index=True)
         credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)
         
         return redirect(url_for('login'))

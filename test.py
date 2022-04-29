@@ -4,11 +4,12 @@ credenziali = pd.read_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.c
 
 print(credenziali)
 
-utente = {"Username": 'gino',"Password": 'gino'}
+username = 'gino'
+password = 'gino'
 
-credenziali = credenziali.append(utente,ignore_index=True)
+if username in credenziali.Username.tolist():
+    utente = credenziali[credenziali.Username == username]
 
-print(credenziali)
+    if list(utente.Password)[0] == password:
+        
 
-
-credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)

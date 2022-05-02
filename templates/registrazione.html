@@ -1,17 +1,40 @@
 <head>
 
 </head>
-<body>
-    
-<form action="/registrazione" method="POST">
-    <div>
-        <h1 id="registrati">Registrati</h1>
-        <H2>Username <input type="text" name="Username" id="username" required></H2>
-        <H2>Password <input type="text" name="Password" id="password" required></H2>
-        <H2>Conferma Password <input type="text" name="Password" id="password" required></H2>
 
-        <a href="/login"><input type="button" value="Login" id="loginbtn"></a>
-        <input type="submit" value="Registrati" id="registrati">
-    </div>
-</form>
+<body>
+    <form action="/registrazione" method="POST">
+        <div>
+            <h1>Registrati</h1>
+            <H2>Username <input type="text" name="Username" id="username" required></H2>
+            <H2>Password <input type="text" name="Password" id="password" required></H2>
+            <H2>Conferma Password <input type="text" name="Conf_Password" id="password2" required></H2>
+
+            <a href="/login"><input type="button" value="Login" id="loginbtn"></a>
+            <input type="submit" value="Registrati" id="registrati">
+        </div>
+    </form>
 </body>
+<script type="text/javascript">
+
+    const p1 = document.getElementById("password");
+    const p2 = document.getElementById("password2");
+    const submit = document.getElementById("registrati")
+    submit.disabled = true;
+
+    p1.onkeydown = () => {
+        submit.disabled = p1.value != p2.value;
+    };
+
+    p2.onkeydown = () => {
+        submit.disabled = p1.value != p2.value;
+    };
+
+    p1.onkeyup = () => {
+        submit.disabled = p1.value != p2.value;
+    };
+
+    p2.onkeyup = () => {
+        submit.disabled = p1.value != p2.value;
+    };
+</script>

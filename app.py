@@ -25,18 +25,27 @@ regioni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Regioni.zip")
 def login():
     if request.method == 'GET':
         return render_template('login.html')
-    else:
+    elif request.method == "POST":
         username = request.form['Username']
         password = request.form['Password']
         print('username =',username ,'password =', password)
         print(credenziali)
-        if username in credenziali.Username.tolist():
-            utente = credenziali[credenziali.Username == username]
-            if list(utente.Password)[0] == password:    
+
+        for index,c in credenziali.iterrows():
+            if username == c["Username"] and password == c["Password"]:
                 session['username'] = username
-            return redirect(url_for('home'))
-        else:
-            return redirect(url_for('login'))
+                return redirect(url_for('home'))  
+            
+        return redirect(url_for('login'))
+            
+
+#        if username in credenziali.Username.tolist():
+#            utente = credenziali[credenziali.Username == username]
+#            if list(utente.Password)[0] == password:    
+#                session['username'] = username
+#            return redirect(url_for('home'))
+#        else:
+#            return redirect(url_for('login'))
             
 
 
@@ -44,19 +53,24 @@ def login():
 def registrazione():
     if request.method == 'GET':
         return render_template("registrazione.html")
-    else:
+    elif request.method == "POST":
         global credenziali
         username = request.form['Username']
         password = request.form['Password']
-        utente = {"Username": username,"Password":password}
-        credenziali = credenziali.append(utente,ignore_index=True)
-        credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)
-        
-        return redirect(url_for('login'))
+        if username in credenziali["Username"].tolist():
+            return redirect(url_for("registrazione"))
+        else:
+            utente = {"Username": username,"Password":password}
+            credenziali = credenziali.append(utente,ignore_index=True)
+            credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)      
+            return redirect(url_for('login'))
+
+
+
 
 @app.route("/logout")
 def logout():
-    session["name"] = None
+    session["username"] = None
     return redirect(url_for('home'))
 
 #!--------------------------------------------------------------------

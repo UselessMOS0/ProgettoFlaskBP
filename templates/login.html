@@ -1,7 +1,7 @@
 <head>
     <style>
         body{
-            background-image: url('/static/img/gradientbg.jpg');
+            background-image: url('/static/img/parconazionale.jpg');
             background-size: cover;
             margin: 0;
             padding: 0;
@@ -13,30 +13,82 @@
         }
 
         #loginform{
+            position: relative;
             display: flex;
-            width: 500px;
-            height: 600px;
+            width: 450px;
+            height: 550px;
             border-radius: 35px;
-            border: 2px solid grey;
+            align-items: center;
             justify-content: center;
             text-align: center;
-            background: #ffffff80;
+            background: #020202b0;
+            border: 3px solid rgb(255, 255, 255);
         }
         #accedi{
+            position: absolute;
+            margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0;
+            top: 0px;
+            text-align: center;
             font-size: 50px;
-
         }
+        #registrati{
+            position: absolute;
+            bottom: 0px;
+            left: 20px;
+            font-size: 20px;
+        }
+        #accedibtn{
+            margin-top: 10px;
+            border-radius: 10px;
+            height: 40px;
+            width: 150px;
+            font-size: 20px;
+            font-weight: bold;
+            transition-duration: 300ms;
+        }
+        #accedibtn:hover{
+            background-color: #4895ef;
+            color: white;
+            cursor: pointer;
+        }
+        #usrninp{
+            height: 50px;
+            width: 400px;
+            font-size: 25px;
+            border-radius: 8px;
+        }
+        
+        #pwdinp{
+            margin-top: 10px;
+            height: 50px;
+            width: 400px;
+            font-size: 25px;
+            border-radius: 8px;
+        }
+        a {
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            transition-duration: 200ms;
+        }
+        a:hover{
+            color: #4895ef;
+        }
+
     </style>
 </head>
 <body>
     <form action="/login" method="POST" id="loginform">
         <div>  
             <h1 id="accedi">Accedi</h1>
-            <H2>Username <input type="text" name="Username" id="username" required></H2>
-            <H2>Password <input type="text" name="Password" id="password" required></H2>
+            <input type="text" name="Username" id="usrninp" required placeholder=" Inserisci l'username"><br>
+            <input type="password" name="Password" id="pwdinp" required placeholder=" Inserisci la password">
 
-            <a href="/registrazione"><input type="button" value="Registrati" id="registrati"></a>
-            <input type="submit" value="Accedi" id="accedidestra">
+            <p id="registrati">Non hai un account? <a href="/registrazione">Registrati</a></p>
+            <input type="submit" value="Accedi" id="accedibtn">
         </div>
     </form>
 </body>

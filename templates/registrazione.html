@@ -1,17 +1,106 @@
 <head>
+    <style>
+        body{
+            background-image: url('/static/img/parconazionale.jpg');
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: sans-serif;
+            color: white;
+        }
 
+        #regform{
+            position: relative;
+            display: flex;
+            width: 450px;
+            height: 550px;
+            border-radius: 35px;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: #020202b0;
+            border: 3px solid rgb(255, 255, 255);
+        }
+        #registrati{
+            position: absolute;
+            margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0;
+            top: 0px;
+            text-align: center;
+            font-size: 50px;
+        }
+        
+        #loggati{
+            position: absolute;
+            bottom: 0px;
+            left: 20px;
+            font-size: 20px;
+        }
+
+        #registratibtn{
+            margin-top: 10px;
+            border-radius: 10px;
+            height: 40px;
+            width: 150px;
+            font-size: 20px;
+            font-weight: bold;
+            transition-duration: 300ms;
+        }
+        #registratibtn:hover{
+            background-color: #4895ef;
+            color: white;
+            cursor: pointer;
+        }
+        #username{
+            height: 50px;
+            width: 400px;
+            font-size: 25px;
+            border-radius: 8px;
+        }
+        
+        #password{
+            margin-top: 10px;
+            height: 50px;
+            width: 400px;
+            font-size: 25px;
+            border-radius: 8px;
+        }
+        
+        #password2{
+            margin-top: 10px;
+            height: 50px;
+            width: 400px;
+            font-size: 25px;
+            border-radius: 8px;
+        }
+        a {
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            transition-duration: 200ms;
+        }
+        a:hover{
+            color: #4895ef;
+        }
+
+    </style>
 </head>
 
 <body>
-    <form action="/registrazione" method="POST">
+    <form action="/registrazione" method="POST" id="regform">
         <div>
-            <h1>Registrati</h1>
-            <H2>Username <input type="text" name="Username" id="username" required></H2>
-            <H2>Password <input type="text" name="Password" id="password" required></H2>
-            <H2>Conferma Password <input type="text" name="Conf_Password" id="password2" required></H2>
+            <h1 id="registrati">Registrati</h1>
+            <input type="text" name="Username" id="username" required placeholder=" Inserisci l'username"><br>
+            <input type="password" name="Password" id="password" required placeholder=" Inserisci la password"><br>
+            <input type="password" name="Conf_password" id="password2" required placeholder=" Conferma la password">
 
-            <a href="/login"><input type="button" value="Login" id="loginbtn"></a>
-            <input type="submit" value="Registrati" id="registrati">
+            <p id="loggati">Se già registrato? <a href="/login">Loggati</a></p>
+            <input type="submit" value="Registrati" id="registratibtn">
         </div>
     </form>
 </body>

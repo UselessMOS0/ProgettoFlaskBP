@@ -20,7 +20,13 @@ import matplotlib.pyplot as plt
 
 credenziali = pd.read_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv')
 regioni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Regioni.zip")
+province = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Province.zip")
+comuni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Comuni.zip")
+popolazione = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/popolazione.csv")
 
+print(comuni)
+
+print(popolazione)
 @app.route("/login", methods=['GET','POST'])
 def login():
     if request.method == 'GET':
@@ -39,24 +45,15 @@ def login():
         return redirect(url_for('login'))
             
 
-#        if username in credenziali.Username.tolist():
-#            utente = credenziali[credenziali.Username == username]
-#            if list(utente.Password)[0] == password:    
-#                session['username'] = username
-#            return redirect(url_for('home'))
-#        else:
-#            return redirect(url_for('login'))
-            
-
-
 @app.route("/registrazione", methods=['GET','POST'])
 def registrazione():
     if request.method == 'GET':
         return render_template("registrazione.html")
     elif request.method == "POST":
         global credenziali
-        username = request.form['Username']
+        username = request.form['Username'].replace(" ", "")
         password = request.form['Password']
+
         if username in credenziali["Username"].tolist():
             return redirect(url_for("registrazione"))
         else:
@@ -65,8 +62,11 @@ def registrazione():
             credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)      
             return redirect(url_for('login'))
 
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
 
-
+#! ROUTE DEL LOGOUT
+#! ROUTE DEL LOGOUT
 
 @app.route("/logout")
 def logout():

@@ -14,17 +14,20 @@ from matplotlib.figure import Figure
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import folium
 
 #! ROUTE DEL LOGIN E DELLA REGISTRAZIONE ROUTE DEL LOGIN E DELLA REGISTRAZIONE 
 #! ROUTE DEL LOGIN E DELLA REGISTRAZIONE ROUTE DEL LOGIN E DELLA REGISTRAZIONE 
 
 credenziali = pd.read_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv')
-regioni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Regioni.zip")
+regioni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Regioni.zip").to_crs(epsg=4326)
 province = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Province.zip")
 comuni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Comuni.zip")
 popolazione = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/popolazione.csv")
+covid = pd.read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-latest.csv")
 
-print(comuni)
+print(regioni)
+
 
 print(popolazione)
 @app.route("/login", methods=['GET','POST'])
@@ -85,6 +88,29 @@ def home():
         return redirect(url_for('login'))
 
     return render_template("home.html",username = session['username'])
+
+#?--------------------------------------------------------------------
+#?--------------------------------------------------------------------
+
+
+# ROUTE RICERCA INFORMAZIONI ROUTE RICERCA INFORMAZIONI
+# ROUTE RICERCA INFORMAZIONI ROUTE RICERCA INFORMAZIONI
+
+
+
+@app.route("/info", methods=["GET"])
+def info():
+    if not session.get('username'):
+        return redirect(url_for('login'))
+    
+    m = folium.Map(location=[41,12], zoom_start=6.4)
+
+    for reg in regioni.DEN_REG.tolist():
+        folium.Marker([regioni[regioni.DEN_REG == reg].centroid.y,regioni[regioni.DEN_REG == reg].centroid.x], popup=reg).add_to(m)
+
+    
+    return m._repr_html_()
+
 
 #?--------------------------------------------------------------------
 #?--------------------------------------------------------------------

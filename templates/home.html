@@ -1,13 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <title>Nome sito | home</title>
+    <style>
+        body{
+            margin: 0px;
+        }
+        #top{
+            height: 70px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            background-color: #76c893;
+            align-items: center;
+            font-family: sans-serif;
+            font-weight: bold;
+            color: black;
+        }
+        #top a{
+            font-size: 20px;
+            text-decoration: none;
+            position: absolute;
+            right: 0px;
+            margin-right: 10px;
+            color: black;
+            border: 2px solid white;
+            border-radius: 5px;
+        }
+        
+        #top p{
+            position: absolute;
+            font-size: 30px;
+            right: 100px;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <a href="/login"> <input type="button" value="Login"></a>
-        <a href="/logout"> <input type="button" value="Logout"></a>
-        <h1 id="benevenuto">Benvenuto {{username}}!</h1>
+    <div id="top">
+        <a href="/logout" id="logout"> Logout</a>
+        <p>Benvenuto {{username}}!</p>
+    </div>
+    <div id="main">
+        <a href="/info"> ricerca di informazioni</a> <br>
+        <a href="/game"> minigioco </a> <br>
+        <a href="/quiz"> quiz </a>
     </div>
 </body>
-</html>

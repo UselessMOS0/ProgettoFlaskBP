@@ -106,14 +106,21 @@ def info():
     m = folium.Map(location=[41,12], zoom_start=6.4)
 
     for reg in regioni.DEN_REG.tolist():
-        folium.Marker([regioni[regioni.DEN_REG == reg].centroid.y,regioni[regioni.DEN_REG == reg].centroid.x], popup=reg).add_to(m)
+        url = str(url_for("inforeg", regione=reg))
+        folium.Marker([regioni[regioni.DEN_REG == reg].centroid.y,regioni[regioni.DEN_REG == reg].centroid.x], popup=f"<a href={url}>{reg}</a>").add_to(m)
 
     
     return m._repr_html_()
 
 
+
+@app.route("/info/<regione>", methods=["GET"])
+def inforeg(regione):
+    return render_template("info.html", regione=regione)
 #?--------------------------------------------------------------------
 #?--------------------------------------------------------------------
+
+
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3245, debug=True)

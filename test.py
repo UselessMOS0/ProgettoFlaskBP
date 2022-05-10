@@ -11,10 +11,7 @@ import matplotlib.pyplot as plt
 import folium
 
 
-regioni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Regioni.zip").to_crs(3857)
+mondo =  gpd.read_file(gpd.datasets.get_path('naturalearth_lowres')).to_crs(epsg=4326)
 
-for reg in regioni.DEN_REG.tolist():
-    print(regioni[regioni.DEN_REG == reg].geometry.centroid.x)
-    print(regioni[regioni.DEN_REG == reg].geometry.centroid.y)
-
-print(regioni)
+for _,r in mondo.iterrows():
+    print()

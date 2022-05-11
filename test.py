@@ -13,5 +13,4 @@ import folium
 
 mondo =  gpd.read_file(gpd.datasets.get_path('naturalearth_lowres')).to_crs(epsg=4326)
 
-for _,r in mondo.iterrows():
-    print()
+print(len(mondo))

@@ -15,6 +15,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import folium
+import random as rnd
 
 #! ROUTE DEL LOGIN E DELLA REGISTRAZIONE ROUTE DEL LOGIN E DELLA REGISTRAZIONE 
 #! ROUTE DEL LOGIN E DELLA REGISTRAZIONE ROUTE DEL LOGIN E DELLA REGISTRAZIONE 
@@ -22,14 +23,11 @@ import folium
 credenziali = pd.read_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv')
 mondo =  gpd.read_file(gpd.datasets.get_path('naturalearth_lowres')).to_crs(epsg=4326)
 regioni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Regioni.zip").to_crs(epsg=4326)
-province = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Province.zip")
+province = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Province.zip").to_crs(epsg=4326)
 comuni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Comuni.zip")
 popolazione = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/popolazione.csv")
 covid = pd.read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-latest.csv")
 
-
-
-print(mondo)
 
 
 print(popolazione)
@@ -103,7 +101,7 @@ def home():
 
 @app.route("/info", methods=["GET"])
 def info():
-    if not session.get('username'):
+    '''if not session.get('username'):
         return redirect(url_for('login'))
     
     m = folium.Map(location=[41,12], zoom_start=6.4)
@@ -111,9 +109,24 @@ def info():
     for reg in regioni.DEN_REG.tolist():
         url = str(url_for("inforeg", regione=reg))
         folium.Marker([regioni[regioni.DEN_REG == reg].centroid.y,regioni[regioni.DEN_REG == reg].centroid.x], popup=f"<a href={url}>{reg}</a>").add_to(m)
+'''
 
+    folinfo = folium.Map(location=[41,12], max_bounds=True, zoom_start=3 , min_zoom=2.8)
     
-    return m._repr_html_()
+
+    for _, r in regioni.iterrows():
+    # Without simplifying the representation of each borough,
+    # the map might not be displayed
+        url = str(url_for("inforeg", regione=r['DEN_REG']))
+        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0000000000000000000000000000000000000000000000001)
+        geo_j = sim_geo.to_json()
+        geo_j = folium.GeoJson(data=geo_j,
+                        style_function=lambda x: {'fillColor': 'orange'})
+        folium.Popup(f"<a href={url}>{r['DEN_REG']}</a>"
+        ).add_to(geo_j)
+        geo_j.add_to(folinfo)
+    
+    return folinfo._repr_html_()
 
 
 
@@ -134,8 +147,11 @@ def game():
 
 @app.route("/game/mondo", methods=["GET"])
 def gamemondo():
-    folmondo = folium.Map(location=[19.14,-12.56], max_bounds=True, zoom_start=3 , min_zoom=2, tiles='stamenwatercolor')
-    #folium.TileLayer('stamenwatercolor').add_to(folmondo)
+    rndpaese = rnd.randrange(len(mondo)-1)
+    rndpaese = mondo[mondo.index == rndpaese].name.to_string(index=False)
+
+    folmondo = folium.Map(location=[19.14,-12.56], max_bounds=True, zoom_start=3 , min_zoom=2.8, tiles='stamenwatercolor')
+    
 
     for _, r in mondo.iterrows():
     # Without simplifying the representation of each borough,
@@ -147,14 +163,24 @@ def gamemondo():
         ).add_to(geo_j)
         geo_j.add_to(folmondo)
 
-    return render_template("game.html", map = folmondo._repr_html_())
+    return render_template("game.html",titolo = "MINIGIOCO SUGLI STATI DEL MONDO" , map = folmondo._repr_html_(), rndpaese = rndpaese)
 
 @app.route("/game/province", methods=["GET"])
 def gameprovince():
+    folprov = folium.Map(location=[41,12], zoom_start=6.4, max_bounds=True, tiles='stamenwatercolor')
     
-    return render_template("game.html")
 
+    for _, r in province.iterrows():
+    # Without simplifying the representation of each borough,
+    # the map might not be displayed
+        sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0000000000000000000000000000000000000000000000001)
+        geo_j = sim_geo.to_json()
+        geo_j = folium.GeoJson(data=geo_j)
+        folium.Popup(r['DEN_UTS']
+        ).add_to(geo_j)
+        geo_j.add_to(folprov)
 
+    return render_template("game.html",titolo = "MINIGIOCO SULLE PROVINCE" , map = folprov._repr_html_())
 
 
 

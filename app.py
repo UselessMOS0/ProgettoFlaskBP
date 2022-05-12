@@ -159,14 +159,18 @@ def gamemondo():
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0000000000000000000000000000000000000000000000001)
         geo_j = sim_geo.to_json()
         geo_j = folium.GeoJson(data=geo_j)
-        folium.Popup(r['name']
+        folium.Popup("<a href='/game/mondo/risultato'><button type='button' style=''>Conferma</button></a>"
         ).add_to(geo_j)
         geo_j.add_to(folmondo)
 
-    return render_template("game.html",titolo = "MINIGIOCO SUGLI STATI DEL MONDO" , map = folmondo._repr_html_(), rndpaese = rndpaese)
+    return render_template("game.html",titolo = "MINIGIOCO SUGLI STATI DEL MONDO" , map = folmondo._repr_html_(),indovina = "Indovina lo stato:" , rndnome = rndpaese)
 
 @app.route("/game/province", methods=["GET"])
 def gameprovince():
+    
+    rndprov = rnd.randrange(len(province)-1)
+    rndprov = province[province.index == rndprov].DEN_UTS.to_string(index=False)
+    
     folprov = folium.Map(location=[41,12], zoom_start=6.4, max_bounds=True, tiles='stamenwatercolor')
     
 
@@ -176,11 +180,11 @@ def gameprovince():
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0000000000000000000000000000000000000000000000001)
         geo_j = sim_geo.to_json()
         geo_j = folium.GeoJson(data=geo_j)
-        folium.Popup(r['DEN_UTS']
+        folium.Popup("<a href='/game/mondo/risultato'><button type='button' style='font-family: sans-serif;border-radius: 10px;height: 35px;width: 100px;font-size: 18px;font-weight: bold;'>Conferma</button></a>"
         ).add_to(geo_j)
         geo_j.add_to(folprov)
 
-    return render_template("game.html",titolo = "MINIGIOCO SULLE PROVINCE" , map = folprov._repr_html_())
+    return render_template("game.html",titolo = "MINIGIOCO SULLE PROVINCE" , map = folprov._repr_html_(), indovina = "Indovina la provincia:", rndnome = rndprov)
 
 
 

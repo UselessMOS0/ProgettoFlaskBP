@@ -31,6 +31,52 @@
             font-size: 30px;
             right: 100px;
         }
+
+        #img1{
+            width : 600px;
+            height : 300px;
+            border: 2px solid rgb(83, 83, 83); 
+            border-radius: 20px;
+            margin: 5px;
+        }
+
+        #img2{
+            width : 600px;
+            height : 300px;
+            border: 2px solid rgb(83, 83, 83); 
+            border-radius: 20px;
+            margin: 5px;
+        }
+
+        #img3{
+            width : 600px;
+            height : 300px;
+            border: 2px solid rgb(83, 83, 83); 
+            border-radius: 20px;
+            margin: 5px;
+        }
+    
+        #imgD1 {        
+            display: flex;
+            justify-content: center;       
+        }
+
+        #imgD2 {        
+            display: flex;
+            justify-content: center;       
+        }
+        
+
+        #main{
+            margin: 0px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+
     </style>
 </head>
 <body>
@@ -39,8 +85,12 @@
         <p>Benvenuto {{username}}!</p>
     </div>
     <div id="main">
-        <a href="/info"> Ricerca di informazioni</a> <br>
-        <a href="/game"> Minigioco </a> <br>
-        <a href="/quiz"> Quiz </a>
+        <div id="imgD1">
+            <a href="/info"> <img src="static/img/lente.jpg" alt="Img1" id="img1"> </a> 
+            <a href="/quiz"> <img src="static/img/interrogativo.jpg" alt="Img2" id="img2"> </a> 
+        </div> 
+        <div id="imgD2">
+            <a href="/game"> <img src="static/img/mondo.png" alt="Img3" id="img3"> </a>
+        </div>
     </div>
 </body>

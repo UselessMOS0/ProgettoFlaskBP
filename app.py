@@ -101,9 +101,9 @@ def home():
 
 @app.route("/info", methods=["GET"])
 def info():
-    '''if not session.get('username'):
+    if not session.get('username'):
         return redirect(url_for('login'))
-    
+    '''
     m = folium.Map(location=[41,12], zoom_start=6.4)
 
     for reg in regioni.DEN_REG.tolist():
@@ -111,7 +111,7 @@ def info():
         folium.Marker([regioni[regioni.DEN_REG == reg].centroid.y,regioni[regioni.DEN_REG == reg].centroid.x], popup=f"<a href={url}>{reg}</a>").add_to(m)
 '''
 
-    folinfo = folium.Map(location=[41,12], max_bounds=True, zoom_start=3 , min_zoom=2.8)
+    folinfo = folium.Map(location=[41,12], max_bounds=True, zoom_start=7 , min_zoom=4)
     
 
     for _, r in regioni.iterrows():

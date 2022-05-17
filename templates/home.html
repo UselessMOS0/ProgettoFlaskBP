@@ -1,10 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
     <title>Nome sito | home</title>
     <style>
-        body{
+        body {
             margin: 0px;
         }
-        #top{
+
+        p {
+            font-family: sans-serif;
+        }
+
+        #top {
             height: 70px;
             width: 100%;
             position: relative;
@@ -15,7 +23,24 @@
             font-weight: bold;
             color: black;
         }
-        #top a{
+
+
+        #top p {
+            position: absolute;
+            font-size: 30px;
+            right: 10vh;
+        }
+
+        a {
+            width: 600px;
+            height: 300px;
+            margin:20px;
+        }
+
+        
+        #logout {
+            width: auto;
+            height: auto;
             font-size: 20px;
             text-decoration: none;
             position: absolute;
@@ -25,49 +50,27 @@
             border: 2px solid white;
             border-radius: 5px;
         }
-        
-        #top p{
-            position: absolute;
-            font-size: 30px;
-            right: 100px;
+
+        img {
+            width: 600px;
+            height: 300px;
+            border: 2px solid rgb(83, 83, 83);
+            border-radius: 20px;
+            margin: 0px;
         }
 
-        #img1{
-            width : 600px;
-            height : 300px;
-            border: 2px solid rgb(83, 83, 83); 
-            border-radius: 20px;
-            margin: 5px;
-        }
-
-        #img2{
-            width : 600px;
-            height : 300px;
-            border: 2px solid rgb(83, 83, 83); 
-            border-radius: 20px;
-            margin: 5px;
-        }
-
-        #img3{
-            width : 600px;
-            height : 300px;
-            border: 2px solid rgb(83, 83, 83); 
-            border-radius: 20px;
-            margin: 5px;
-        }
-    
-        #imgD1 {        
+        #imgD1 {
             display: flex;
-            justify-content: center;       
+            justify-content: center;
         }
 
-        #imgD2 {        
+        #imgD2 {
             display: flex;
-            justify-content: center;       
+            justify-content: center;
         }
-        
 
-        #main{
+
+        #main {
             margin: 0px;
             position: absolute;
             top: 50%;
@@ -76,19 +79,76 @@
             transform: translate(-50%, -50%);
         }
 
-        #main a img{
+        #main a img {
             transition: ease-in-out .2s;
+            margin: 20px;
         }
 
-        #main a img:hover{
+        #main a:hover {
             transition: ease-in-out .2s;
-            width: 700px;
-            height: 375px;
+        }
+        #main a:hover img{
+            margin: 0px;
+            opacity: 0.3;
+            width: 650px;
+            height: 345px;
         }
 
+        #txt1 {
+            visibility: hidden;
+            position:absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
+        #main a:hover #txt1 {
+            visibility: visible;
+            font-size: 40px;
+            color: black;
+            position:absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #txt2 {
+            visibility: hidden;
+            position:absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #main a:hover #txt2 {
+            visibility: visible;
+            font-size: 40px;
+            color: black;
+            position:absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #txt3 {
+            visibility: hidden;
+            position:absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #main a:hover #txt3 {
+            visibility: visible;
+            font-size: 40px;
+            color: black;
+            position:absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
     </style>
 </head>
+
 <body>
     <div id="top">
         <a href="/logout" id="logout"> Logout</a>
@@ -96,11 +156,12 @@
     </div>
     <div id="main">
         <div id="imgD1">
-            <a href="/info"> <img src="static/img/lente.jpg" alt="Img1" id="img1"> </a> 
-            <a href="/quiz"> <img src="static/img/interrogativo.jpg" alt="Img2" id="img2"> </a> 
-        </div> 
-        <div id="imgD2">
-            <a href="/game"> <img src="static/img/mondo.png" alt="Img3" id="img3"> </a>
+            <a href="/info" style="position:relative;"> <img src="static/img/lente.jpg" alt="Img1" id="img1"> <p id="txt1">info</p> </a>
+            <a href="/quiz" style="position:relative;"> <img src="static/img/interrogativo.jpg" alt="Img2" id="img2"> <p id="txt2">quiz</p> </a>
+        </div>
+        <div id="imgD2" >
+            <a href="/game" style="position:relative;"> <img src="static/img/mondo.png" alt="Img3" id="img3"> <p id="txt3">game</p> </a>
         </div>
     </div>
 </body>
+</html>

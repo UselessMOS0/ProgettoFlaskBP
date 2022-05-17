@@ -28,9 +28,6 @@ comuni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Comuni.zip")
 popolazione = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/popolazione.csv")
 covid = pd.read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-latest.csv")
 
-
-
-print(popolazione)
 @app.route("/login", methods=['GET','POST'])
 def login():
     if request.method == 'GET':
@@ -138,8 +135,9 @@ def inforeg(regione):
 #?--------------------------------------------------------------------
 
 
-#? MINIGIOCO  MINIGIOCO MINIGIOCO 
-#? MINIGIOCO  MINIGIOCO MINIGIOCO 
+#? ROUTE MINIGIOCO MONDO ROUTE MINIGIOCO MONDO
+#? ROUTE MINIGIOCO MONDO ROUTE MINIGIOCO MONDO
+
 
 @app.route("/game", methods=["GET"])
 def game():
@@ -159,15 +157,31 @@ def gamemondo():
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0000000000000000000000000000000000000000000000001)
         geo_j = sim_geo.to_json()
         geo_j = folium.GeoJson(data=geo_j)
-        folium.Popup("<a href='/game/mondo/risultato'><button type='button' style=''>Conferma</button></a>"
+        folium.Popup(f"<form action='/game/mondo/conferma' method='POST'> <input type='hidden' name='paese' value='{r['name']}' > <input type='hidden' name='random' value='{rndpaese}' > <input type='submit' value='Conferma' style='font-family: sans-serif;border-radius: 10px;height: 35px;width: 100px;font-size: 18px;font-weight: bold;'> </form>"
         ).add_to(geo_j)
         geo_j.add_to(folmondo)
 
     return render_template("game.html",titolo = "MINIGIOCO SUGLI STATI DEL MONDO" , map = folmondo._repr_html_(),indovina = "Indovina lo stato:" , rndnome = rndpaese)
 
+@app.route("/game/mondo/conferma", methods=["POST"])
+def conferma_mondo():
+    paese = request.form["paese"]
+    random = request.form["random"]
+    risultato = "No, la risposta è sbagliata"
+    if paese == random:
+        risultato = "La risposta è corretta"
+    return render_template("conferma.html", risposta=paese, risultato= risultato)
+
+
+#?--------------------------------------------------------------------
+#?--------------------------------------------------------------------
+
+
+#? ROUTE MINIGIOCO PROVINCE ROUTE MINIGIOCO PROVINCE  
+#? ROUTE MINIGIOCO PROVINCE ROUTE MINIGIOCO PROVINCE  
+
 @app.route("/game/province", methods=["GET"])
 def gameprovince():
-    
     rndprov = rnd.randrange(len(province)-1)
     rndprov = province[province.index == rndprov].DEN_UTS.to_string(index=False)
     
@@ -180,12 +194,20 @@ def gameprovince():
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0000000000000000000000000000000000000000000000001)
         geo_j = sim_geo.to_json()
         geo_j = folium.GeoJson(data=geo_j)
-        folium.Popup("<a href='/game/mondo/risultato'><button type='button' style='font-family: sans-serif;border-radius: 10px;height: 35px;width: 100px;font-size: 18px;font-weight: bold;'>Conferma</button></a>"
+        folium.Popup(f"<form action='/game/province/conferma' method='POST'> <input type='hidden' name='provincia' value='{r['DEN_UTS']}' > <input type='hidden' name='random' value='{rndprov}' > <input type='submit' value='Conferma' style='font-family: sans-serif;border-radius: 10px;height: 35px;width: 100px;font-size: 18px;font-weight: bold;'> </form>"
         ).add_to(geo_j)
         geo_j.add_to(folprov)
 
     return render_template("game.html",titolo = "MINIGIOCO SULLE PROVINCE" , map = folprov._repr_html_(), indovina = "Indovina la provincia:", rndnome = rndprov)
 
+@app.route("/game/province/conferma", methods=["POST"])
+def conferma_province():
+    provincia = request.form["provincia"]
+    random = request.form["random"]
+    risultato = "No, la risposta è sbagliata"
+    if provincia == random:
+        risultato = "La risposta è corretta"
+    return render_template("conferma.html", risulato=provincia, risultato= risultato)
 
 
 #?--------------------------------------------------------------------

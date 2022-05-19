@@ -203,11 +203,12 @@ def gameprovince():
 @app.route("/game/province/conferma", methods=["POST"])
 def conferma_province():
     provincia = request.form["provincia"]
+    print(provincia)
     random = request.form["random"]
     risultato = "No, la risposta è sbagliata"
     if provincia == random:
         risultato = "La risposta è corretta"
-    return render_template("conferma.html", risulato=provincia, risultato= risultato)
+    return render_template("conferma.html", risposta=provincia, risultato=risultato)
 
 
 #?--------------------------------------------------------------------

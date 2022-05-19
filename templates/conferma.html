@@ -2,7 +2,21 @@
 
     <head>
         <style>
-            
+            #risultato{
+            width: 30%;
+            height: 25%;
+            border-radius: 35px;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0;
+            top: 25%;
+            text-align: center;    
+            border: 3px solid rgb(0, 0, 0);  
+            }
         </style>
     </head>
 
@@ -10,7 +24,8 @@
         <div id="risultato">
             <br>
             {{risposta}} <br>
-            {{risultato}}
+            {{risultato}} <br>
+            <img src="{{immagine}}" alt="immagine" style="width: 25%; height:fit-content;">
         </div>
     </body>
 </html>

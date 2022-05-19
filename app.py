@@ -168,9 +168,11 @@ def conferma_mondo():
     paese = request.form["paese"]
     random = request.form["random"]
     risultato = "No, la risposta è sbagliata"
+    immagine = "/static/img/errore.png"
     if paese == random:
         risultato = "La risposta è corretta"
-    return render_template("conferma.html", risposta=paese, risultato= risultato)
+        immagine = "/static/img/giusto.png"
+    return render_template("conferma.html", risposta=paese, risultato= risultato, immagine = immagine)
 
 
 #?--------------------------------------------------------------------
@@ -206,9 +208,11 @@ def conferma_province():
     print(provincia)
     random = request.form["random"]
     risultato = "No, la risposta è sbagliata"
+    immagine = "/static/img/errore.png"
     if provincia == random:
         risultato = "La risposta è corretta"
-    return render_template("conferma.html", risposta=provincia, risultato=risultato)
+        immagine = "/static/img/giusto.png"
+    return render_template("conferma.html", risposta=provincia, risultato=risultato, immagine= immagine)
 
 
 #?--------------------------------------------------------------------

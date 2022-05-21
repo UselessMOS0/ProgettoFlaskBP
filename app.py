@@ -112,8 +112,6 @@ def info():
     
 
     for _, r in regioni.iterrows():
-    # Without simplifying the representation of each borough,
-    # the map might not be displayed
         url = str(url_for("inforeg", regione=r['DEN_REG']))
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0000000000000000000000000000000000000000000000001)
         geo_j = sim_geo.to_json()
@@ -152,8 +150,6 @@ def gamemondo():
     
 
     for _, r in mondo.iterrows():
-    # Without simplifying the representation of each borough,
-    # the map might not be displayed
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0000000000000000000000000000000000000000000000001)
         geo_j = sim_geo.to_json()
         geo_j = folium.GeoJson(data=geo_j)
@@ -191,8 +187,6 @@ def gameprovince():
     
 
     for _, r in province.iterrows():
-    # Without simplifying the representation of each borough,
-    # the map might not be displayed
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0000000000000000000000000000000000000000000000001)
         geo_j = sim_geo.to_json()
         geo_j = folium.GeoJson(data=geo_j)

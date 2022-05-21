@@ -33,12 +33,12 @@
         a {
             width: 30vw;
             height: 30vh;
-            margin:20px;
         }
 
         
         #logout {
-            width: 5vw;
+            width:
+             5vw;
             height: 3vh;
             font-size: 1.7vh;
             text-decoration: none;
@@ -58,6 +58,11 @@
             width:100vw;
             height: 93vh;
             top: 7vh;
+            display: grid;
+            justify-content: center;
+            grid-gap: 40px;
+            grid-template-columns: repeat(2, calc(33.33% - 20px));
+            position: relative;
         }
 
         img {
@@ -65,90 +70,39 @@
             height: 30vh;
             border: 2px solid rgb(83, 83, 83);
             border-radius: 20px;
-            transition: ease-in-out .2s;
-            margin: 20px;
-        }
-
-        #imgD1 {
-            top: 0%;
-            width: 100%;
-            height: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #imgD2 {
-            bottom: 0%;
-            width: 100%;
-            height: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #main a:hover {
-            width: 32vw;
-            height: 32vh;
-        }
-        #main a:hover img{
+            transition: transform .2s;
             margin: 0px;
-            opacity: 0.3;
-            width: 32vw;
-            height: 32vh;
         }
-
-        #txt1 {
-            visibility: hidden;
-            position:absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 40px;
-            color: black;
-        }
-
-        #main a:hover #txt1 {
-            visibility: visible;
+        #main div:hover img{
             transform: scale(1.2);
+            opacity: .5;
         }
-
-        #txt2 {
-            visibility: hidden;
-            position:absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 40px;
-            color: black;
-        }
-
-        #main a:hover #txt2 {
+        
+        #main div:hover p{
             visibility: visible;
-            font-size: 40px;
-            color: black;
-            position:absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        #txt3 {
-            visibility: hidden;
-            position:absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            transition: visibility 100ms linear 0s, opacity 300ms;
         }
 
-        #main a:hover #txt3 {
-            visibility: visible;
-            font-size: 40px;
-            color: black;
-            position:absolute;
+        #center{
+            left: 18vw;
+            top: 40px;
+        }
+        #main div{
+            position: relative;
+            width: 30vw;
+            height: 30vh;
+        }
+    
+        #main p{
+            visibility: hidden;
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            font-size: 90px;
+            margin: 0px;
         }
+
     </style>
 </head>
 
@@ -158,12 +112,14 @@
         <p>Benvenuto {{username}}!</p>
     </div>
     <div id="main">
-        <div id="imgD1">
-            <a href="/info" style="position:relative;"> <img src="static/img/lente.jpg" alt="Img1" id="img1"> <p id="txt1">info</p> </a>
-            <a href="/quiz" style="position:relative;"> <img src="static/img/interrogativo.jpg" alt="Img2" id="img2"> <p id="txt2">quiz</p> </a>
+        <div>
+            <a href="/info" style=""> <img src="static/img/lente.jpg" alt="Img1" id="img1"> <p id="txt1">info</p> </a>
         </div>
-        <div id="imgD2">
-            <a href="/game" style="position:relative;"> <img src="static/img/mondo.png" alt="Img3" id="img3"> <p id="txt3">game</p> </a>
+        <div>
+            <a href="/quiz"> <img src="static/img/interrogativo.jpg" alt="Img2" id="img2"> <p id="txt2">quiz</p> </a>
+        </div>
+        <div>
+            <a href="/game" style=""> <img src="static/img/mondo.png" alt="Img3" id="img3"> <p id="txt3">game</p> </a>
         </div>
     </div>
 </body>

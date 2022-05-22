@@ -5,9 +5,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <style>
+
+        img{
+            width: 40%;
+            height: 60%;
+            border: 2px solid rgb(83, 83, 83);
+            border-radius: 35px;
+        }
+
+        #mod1{
+            position: relative;
+            width: 40%;
+            height: 60%;
+            border-radius: 35px;
+
+        }
+
+        #mod2{
+            position: relative;
+            width: 40%;
+            height: 60%;
+            border-radius: 35px;
+
+        }
+    </style>
 </head>
 <body>
-    <a href="/game/mondo">Minigioco rigurdante tutto il mondo</a> <br>
-    <a href="/game/province">Minigioco rigurdante le province italiane</a>
+    <div id="immagini">
+        <div id="mod1">
+            <a href="/game/mondo"><img src="/static/img/modMondo.jpg" alt="Mondo" ></a>
+        </div>
+        <div id="mod2">
+            <a href="/game/province"><img src="/static/img/modProvince.png" alt="Province" ></a>
+        </div>
+    </div>
 </body>
 </html>

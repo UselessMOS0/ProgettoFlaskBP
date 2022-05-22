@@ -43,7 +43,8 @@ def login():
                 session['username'] = username
                 return redirect(url_for('home'))  
             
-        return redirect(url_for('login'))
+        return render_template("errore.html")
+        #return redirect(url_for('login'))
             
 
 @app.route("/registrazione", methods=['GET','POST'])

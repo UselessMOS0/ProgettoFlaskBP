@@ -7,38 +7,116 @@
     <title>Document</title>
 
     <style>
+        
+        body {
+            margin: 0px;
+            font-family: sans-serif;
+        }
 
-        img{
-            width: 40%;
-            height: 60%;
+
+
+        #top {
+            height: 7vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+            background-color: #76c893;
+            align-items: center;
+            font-family: sans-serif;
+            font-weight: bold;
+            color: black;
+        }
+
+
+        #top p {
+            position: absolute;
+            font-size: 3vh;
+            right: 6vw;
+        }
+        
+        #logout {
+            width:
+             5vw;
+            height: 3vh;
+            font-size: 1.7vh;
+            text-decoration: none;
+            position: absolute;
+            right: 0px;
+            margin-right: 0.5vw;
+            color: black;
+            border: 2px solid white;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #main {
+            width:92vw;
+            height: 93vh;
+            display: grid;
+            justify-content: center;
+            align-items: center ;
+            grid-gap: 40px;
+            grid-template-columns: repeat(2, calc(33.33% - 20px));
+            position: relative;
+            padding-left: 8vw;
+        }
+        
+        img {
+            width: 20vw;
+            height: 40vh;
             border: 2px solid rgb(83, 83, 83);
             border-radius: 35px;
+            transition: transform .2s;
+            margin: 0px;
+        }
+        
+        #main div{
+            position: relative;
+            width: 20vw;
+            height: 40vh;
+        }
+        
+        #main p{
+            visibility: hidden;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5vw;
+            margin: 0px;
+        }
+        
+        
+        #main div:hover img{
+            transform: scale(1.2);
+            opacity: .5;
+        }
+        
+        #main div:hover p{
+            visibility: visible;
+            transition: visibility 100ms linear 0s, opacity 300ms;
         }
 
-        #mod1{
-            position: relative;
-            width: 40%;
-            height: 60%;
-            border-radius: 35px;
 
-        }
-
-        #mod2{
-            position: relative;
-            width: 40%;
-            height: 60%;
-            border-radius: 35px;
-
+        #main a, a:hover, a:visited, a:active {
+            color: inherit;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <div id="immagini">
-        <div id="mod1">
-            <a href="/game/mondo"><img src="/static/img/modMondo.jpg" alt="Mondo" ></a>
+    <div id="top">
+        <a href="/logout" id="logout"> Logout</a>
+        <p>Benvenuto {{username}}!</p>
+    </div>
+    <div id="main">
+        <div>
+            <a href="/game/mondo"><img src="/static/img/modMondo.jpg" alt="Mondo" ><p id="txt1">Stati</p></a>
         </div>
-        <div id="mod2">
-            <a href="/game/province"><img src="/static/img/modProvince.png" alt="Province" ></a>
+        <div>
+            <a href="/game/province"><img src="/static/img/modProvince.png" alt="Province" ><p id="txt2">Province<br>italiane</p></a>
         </div>
     </div>
 </body>

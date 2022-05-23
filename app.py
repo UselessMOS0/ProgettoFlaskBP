@@ -46,7 +46,6 @@ def login():
         return render_template("errore.html")
         #return redirect(url_for('login'))
             
-
 @app.route("/registrazione", methods=['GET','POST'])
 def registrazione():
     if request.method == 'GET':
@@ -128,7 +127,50 @@ def info():
 
 @app.route("/info/<regione>", methods=["GET"])
 def inforeg(regione):
-    return render_template("info.html", regione=regione)
+    global popolazione_reg, reg, regioneUtente, province_reg
+    reg = regione
+    regioneUtente = regioni[regioni["DEN_REG"] == reg]
+    province_reg = province[province.within(regioneUtente.geometry.squeeze())]
+    popolazione_reg = popolazione[popolazione["Regione"] == reg]
+    return render_template("info.html", regione=regione, province=province_reg['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0])
+
+@app.route("/regione.png", methods=["GET"])
+def regione_png():
+    fig, ax = plt.subplots(figsize = (12,8))
+
+    regioneUtente.to_crs(epsg=3857).plot(ax=ax, alpha=0.5, edgecolor="k")
+    province_reg.to_crs(epsg=3857).plot(ax=ax, alpha=0.5, edgecolor="k")
+    contextily.add_basemap(ax=ax)   
+
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
+
+'''    
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    result = output.getvalue()
+    plt.close(fig)
+    return Response(result, mimetype='image/png') '''
+
+@app.route("/popolazione.png", methods=["GET"])
+def popolazione_png():
+    fig, ax = plt.subplots(figsize = (12,8))
+
+    posizione = popolazione[popolazione["Regione"] == reg].index.values[0]
+    ax.bar(popolazione["Regione"], popolazione["Popolazione_totale"])[posizione].set_color("r")
+    fig.autofmt_xdate(rotation=45)
+    
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
+    
+'''    
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    result = output.getvalue()
+    plt.close(fig)
+    return Response(result, mimetype='image/png') '''
 
 #?--------------------------------------------------------------------
 #?--------------------------------------------------------------------

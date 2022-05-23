@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 import folium
 
 
-mondo =  gpd.read_file(gpd.datasets.get_path('naturalearth_lowres')).to_crs(epsg=4326)
+#mondo =  gpd.read_file(gpd.datasets.get_path('naturalearth_lowres')).to_crs(epsg=4326)
 
-print(len(mondo))
+#print(len(mondo))
+
+

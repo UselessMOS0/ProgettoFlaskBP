@@ -127,13 +127,19 @@ def info():
 
 @app.route("/info/<regione>", methods=["GET"])
 def inforeg(regione):
-    global popolazione_reg, reg, regioneUtente, province_reg
+#   global popolazione_reg, reg, regioneUtente, province_reg, covid_reg
+    global reg, regioneUtente, province_reg
+    print(regioni)
     reg = regione
     regioneUtente = regioni[regioni["DEN_REG"] == reg]
+    perimetro = round(regioneUtente.geometry.length,3)
+    area = round(regioneUtente["Shape_Area"] / 10**9,3)
     province_reg = province[province.within(regioneUtente.geometry.squeeze())]
     popolazione_reg = popolazione[popolazione["Regione"] == reg]
-    return render_template("info.html", regione=regione, province=province_reg['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0])
+    covid_reg = covid[covid["denominazione_regione"] == reg]
+    return render_template("info.html", regione=regione, perimetro=perimetro.values[0], area=area.values[0] ,province=province_reg['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = covid_reg["casi_testati"].values[0])
 
+'''
 @app.route("/regione.png", methods=["GET"])
 def regione_png():
     fig, ax = plt.subplots(figsize = (12,8))
@@ -146,12 +152,13 @@ def regione_png():
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
 
-'''    
+
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     result = output.getvalue()
     plt.close(fig)
     return Response(result, mimetype='image/png') '''
+
 
 @app.route("/popolazione.png", methods=["GET"])
 def popolazione_png():
@@ -165,12 +172,24 @@ def popolazione_png():
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
     
-'''    
+'''  
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     result = output.getvalue()
     plt.close(fig)
     return Response(result, mimetype='image/png') '''
+
+@app.route("/covid.png", methods=["GET"])
+def covid_png():
+    fig, ax = plt.subplots(figsize = (12,8))
+
+    posizione = covid[covid["denominazione_regione"] == reg].index.values[0]
+    ax.bar(covid["denominazione_regione"], covid["casi_testati"])[posizione].set_color("r")
+    fig.autofmt_xdate(rotation=45)
+    
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')   
 
 #?--------------------------------------------------------------------
 #?--------------------------------------------------------------------

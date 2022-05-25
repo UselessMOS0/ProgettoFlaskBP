@@ -28,6 +28,7 @@ comuni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Comuni.zip")
 popolazione = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/popolazione.csv")
 covid = pd.read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-latest.csv")
 
+
 @app.route("/login", methods=['GET','POST'])
 def login():
     if request.method == 'GET':
@@ -35,8 +36,6 @@ def login():
     elif request.method == "POST":
         username = request.form['Username']
         password = request.form['Password']
-        print('username =',username ,'password =', password)
-        print(credenziali)
 
         for index,c in credenziali.iterrows():
             if username == c["Username"] and password == c["Password"]:
@@ -50,17 +49,19 @@ def login():
 def registrazione():
     if request.method == 'GET':
         return render_template("registrazione.html")
+
     elif request.method == "POST":
-        global credenziali
         username = request.form['Username'].replace(" ", "")
         password = request.form['Password']
+
+        global credenziali
 
         if username in credenziali["Username"].tolist():
             return redirect(url_for("registrazione"))
         else:
-            utente = {"Username": username,"Password":password}
-            credenziali = credenziali.append(utente,ignore_index=True)
-            credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)      
+            utente = {"Username": username,"Password":password,"Points":'0'}
+            credenziali = credenziali.append(utente,ignore_index=True)    
+            credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
             return redirect(url_for('login'))
 
 #!--------------------------------------------------------------------
@@ -85,7 +86,11 @@ def home():
     if not session.get('username'):
         return redirect(url_for('login'))
 
-    return render_template("home.html",username = session['username'])
+    for index,c in credenziali.iterrows():
+        if session['username'] == c.Username:
+            session['points'] = int(c.Points)
+
+    return render_template("home.html",username = session['username'],points = session['points'])
 
 #?--------------------------------------------------------------------
 #?--------------------------------------------------------------------
@@ -127,6 +132,8 @@ def info():
 
 @app.route("/info/<regione>", methods=["GET"])
 def inforeg(regione):
+    if not session.get('username'):
+        return redirect(url_for('login'))
 #   global popolazione_reg, reg, regioneUtente, province_reg, covid_reg
     global reg, regioneUtente, province_reg
     print(regioni)
@@ -139,10 +146,10 @@ def inforeg(regione):
     covid_reg = covid[covid["denominazione_regione"] == reg]
     return render_template("info.html", regione=regione, perimetro=perimetro.values[0], area=area.values[0] ,province=province_reg['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = covid_reg["casi_testati"].values[0])
 
-'''
+
 @app.route("/regione.png", methods=["GET"])
 def regione_png():
-    fig, ax = plt.subplots(figsize = (12,8))
+    fig, ax = plt.subplots(figsize = (10,6))
 
     regioneUtente.to_crs(epsg=3857).plot(ax=ax, alpha=0.5, edgecolor="k")
     province_reg.to_crs(epsg=3857).plot(ax=ax, alpha=0.5, edgecolor="k")
@@ -152,7 +159,7 @@ def regione_png():
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
 
-
+'''
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     result = output.getvalue()
@@ -201,10 +208,14 @@ def covid_png():
 
 @app.route("/game", methods=["GET"])
 def game():
+    if not session.get('username'):
+        return redirect(url_for('login'))
     return render_template("mod.html")
 
 @app.route("/game/mondo", methods=["GET"])
 def gamemondo():
+    if not session.get('username'):
+        return redirect(url_for('login'))
     rndpaese = rnd.randrange(len(mondo)-1)
     rndpaese = mondo[mondo.index == rndpaese].name.to_string(index=False)
 
@@ -223,12 +234,16 @@ def gamemondo():
 
 @app.route("/game/mondo/conferma", methods=["POST"])
 def conferma_mondo():
+    if not session.get('username'):
+        return redirect(url_for('login'))
     paese = request.form["paese"]
     random = request.form["random"]
     risultato = "No, la risposta è sbagliata"
     immagine = "/static/img/errore.png"
     if paese == random:
         risultato = "La risposta è corretta"
+        session['points'] += 500
+
         immagine = "/static/img/giusto.png"
     return render_template("conferma.html", risposta=paese, risultato= risultato, immagine = immagine)
 
@@ -242,6 +257,8 @@ def conferma_mondo():
 
 @app.route("/game/province", methods=["GET"])
 def gameprovince():
+    if not session.get('username'):
+        return redirect(url_for('login'))
     rndprov = rnd.randrange(len(province)-1)
     rndprov = province[province.index == rndprov].DEN_UTS.to_string(index=False)
     
@@ -260,6 +277,8 @@ def gameprovince():
 
 @app.route("/game/province/conferma", methods=["POST"])
 def conferma_province():
+    if not session.get('username'):
+        return redirect(url_for('login'))
     provincia = request.form["provincia"]
     print(provincia)
     random = request.form["random"]
@@ -267,6 +286,7 @@ def conferma_province():
     immagine = "/static/img/errore.png"
     if provincia == random:
         risultato = "La risposta è corretta"
+        session['points'] += 500
         immagine = "/static/img/giusto.png"
     return render_template("conferma.html", risposta=provincia, risultato=risultato, immagine= immagine)
 

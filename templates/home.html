@@ -24,12 +24,15 @@
         }
 
 
-        #top p {
+        #name {
             position: absolute;
             font-size: 3vh;
-            right: 6vw;
+            right: 9vw;
         }
-
+        #points {
+            position: absolute;
+            font-size: 3vh;
+            right: 6vw;}
         a {
             width: 30vw;
             height: 30vh;
@@ -113,7 +116,8 @@
 <body>
     <div id="top">
         <a href="/logout" id="logout"> Logout</a>
-        <p>Benvenuto {{username}}!</p>
+        <p id="name">Benvenuto {{username}}!</p>
+        <p id="points">{{points}}</p>
     </div>
     <div id="main">
         <div>

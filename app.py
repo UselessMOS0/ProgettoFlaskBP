@@ -29,6 +29,20 @@ popolazione = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/popolazione.c
 covid = pd.read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-latest.csv")
 
 
+#? ROUTE
+#? ROUTE HOME PAGE
+
+@app.route("/", methods=["GET"])
+def home_page():
+    return render_template("homePage.html")
+
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+
+
+#? ROUTE LOGIN E REG ROUTE LOGIN E REG
+#? ROUTE LOGIN E REG ROUTE LOGIN E REG
+
 @app.route("/login", methods=['GET','POST'])
 def login():
     if request.method == 'GET':
@@ -51,6 +65,7 @@ def registrazione():
         return render_template("registrazione.html")
 
     elif request.method == "POST":
+        email = request.form['Email']
         username = request.form['Username'].replace(" ", "")
         password = request.form['Password']
 
@@ -59,7 +74,7 @@ def registrazione():
         if username in credenziali["Username"].tolist():
             return redirect(url_for("registrazione"))
         else:
-            utente = {"Username": username,"Password":password,"Points":'0'}
+            utente = {"Email":email,"Username": username,"Password":password,"Points":'0'}
             credenziali = credenziali.append(utente,ignore_index=True)    
             credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
             return redirect(url_for('login'))
@@ -81,7 +96,7 @@ def logout():
 #? ROUTE HOME DEL SITO 
 #? ROUTE HOME DEL SITO
 
-@app.route("/", methods=["GET"])
+@app.route("/home", methods=["GET"])
 def home():
     if not session.get('username'):
         return redirect(url_for('login'))
@@ -144,7 +159,7 @@ def inforeg(regione):
     province_reg = province[province.within(regioneUtente.geometry.squeeze())]
     popolazione_reg = popolazione[popolazione["Regione"] == reg]
     covid_reg = covid[covid["denominazione_regione"] == reg]
-    return render_template("info.html", regione=regione, perimetro=perimetro.values[0], area=area.values[0] ,province=province_reg['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = covid_reg["casi_testati"].values[0])
+    return render_template("info.html", regione=regione, perimetro=perimetro.values[0], area=area.values[0] ,province=province_reg['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = covid_reg["casi_testati"].values[0],username = session['username'],points = session['points'])
 
 
 @app.route("/regione.png", methods=["GET"])
@@ -210,7 +225,7 @@ def covid_png():
 def game():
     if not session.get('username'):
         return redirect(url_for('login'))
-    return render_template("mod.html")
+    return render_template("mod.html", username = session['username'],points = session['points'])
 
 @app.route("/game/mondo", methods=["GET"])
 def gamemondo():
@@ -230,7 +245,7 @@ def gamemondo():
         ).add_to(geo_j)
         geo_j.add_to(folmondo)
 
-    return render_template("game.html",titolo = "MINIGIOCO SUGLI STATI DEL MONDO" , map = folmondo._repr_html_(),indovina = "Indovina lo stato:" , rndnome = rndpaese)
+    return render_template("game.html",titolo = "MINIGIOCO SUGLI STATI DEL MONDO" , map = folmondo._repr_html_(),indovina = "Indovina lo stato:" , rndnome = rndpaese,username = session['username'],points = session['points'])
 
 @app.route("/game/mondo/conferma", methods=["POST"])
 def conferma_mondo():
@@ -242,10 +257,13 @@ def conferma_mondo():
     immagine = "/static/img/errore.png"
     if paese == random:
         risultato = "La risposta è corretta"
+        
         session['points'] += 500
+        credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
+        credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
 
         immagine = "/static/img/giusto.png"
-    return render_template("conferma.html", risposta=paese, risultato= risultato, immagine = immagine)
+    return render_template("conferma.html", risposta=paese, risultato= risultato, immagine = immagine,username = session['username'],points = session['points'])
 
 
 #?--------------------------------------------------------------------
@@ -273,7 +291,7 @@ def gameprovince():
         ).add_to(geo_j)
         geo_j.add_to(folprov)
 
-    return render_template("game.html",titolo = "MINIGIOCO SULLE PROVINCE" , map = folprov._repr_html_(), indovina = "Indovina la provincia:", rndnome = rndprov)
+    return render_template("game.html",titolo = "MINIGIOCO SULLE PROVINCE" , map = folprov._repr_html_(), indovina = "Indovina la provincia:", rndnome = rndprov,username = session['username'],points = session['points'])
 
 @app.route("/game/province/conferma", methods=["POST"])
 def conferma_province():
@@ -286,9 +304,13 @@ def conferma_province():
     immagine = "/static/img/errore.png"
     if provincia == random:
         risultato = "La risposta è corretta"
+
         session['points'] += 500
+        credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
+        credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
+
         immagine = "/static/img/giusto.png"
-    return render_template("conferma.html", risposta=provincia, risultato=risultato, immagine= immagine)
+    return render_template("conferma.html", risposta=provincia, risultato=risultato, immagine= immagine, username = session['username'],points = session['points'])
 
 
 #?--------------------------------------------------------------------

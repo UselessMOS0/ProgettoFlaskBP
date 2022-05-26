@@ -56,7 +56,16 @@
             color: white;
             cursor: pointer;
         }
+        
+        #email{
+            height: 5vh;
+            width: 20vw;
+            font-size: 25px;
+            border-radius: 8px;
+        }
+
         #username{
+            margin-top: 10px;
             height: 5vh;
             width: 20vw;
             font-size: 25px;
@@ -95,6 +104,7 @@
     <form action="/registrazione" method="POST" id="regform">
         <div>
             <h1 id="registrati">Registrati</h1>
+            <input type="email" name="Email" id="email" required placeholder=" Inserisci l'email" >
             <input type="text" name="Username" id="username" required placeholder=" Inserisci l'username"><br>
             <input type="password" name="Password" id="password" required placeholder=" Inserisci la password"><br>
             <input type="password" name="Conf_password" id="password2" required placeholder=" Conferma la password">

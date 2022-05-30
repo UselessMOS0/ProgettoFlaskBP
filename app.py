@@ -27,6 +27,8 @@ province = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Province.zip")
 comuni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Comuni.zip")
 popolazione = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/popolazione.csv")
 covid = pd.read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-latest.csv")
+df_quiz = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/quiz.csv")
+lista = []
 
 
 #? ROUTE
@@ -161,7 +163,7 @@ def inforeg(regione):
     covid_reg = covid[covid["denominazione_regione"] == reg]
     return render_template("info.html", regione=regione, perimetro=perimetro.values[0], area=area.values[0] ,province=province_reg['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = covid_reg["casi_testati"].values[0],username = session['username'],points = session['points'])
 
-
+'''
 @app.route("/regione.png", methods=["GET"])
 def regione_png():
     fig, ax = plt.subplots(figsize = (10,6))
@@ -173,7 +175,7 @@ def regione_png():
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
-
+'''
 '''
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
@@ -316,7 +318,35 @@ def conferma_province():
 #?--------------------------------------------------------------------
 #?--------------------------------------------------------------------
 
+#? ROUTE QUIZ
+#? ROUTE QUIZ 
 
+@app.route("/quiz", methods=["GET"])
+def quiz():
+    global  risposta
+    rnd_quiz = rnd.randrange(len(df_quiz)-1)
+    while rnd_quiz in lista:
+        rnd_quiz = rnd.randrange(len(df_quiz)-1)
+
+    lista.append(rnd_quiz)
+    print(lista)
+    domanda = df_quiz[df_quiz.index == rnd_quiz].Domande.to_string(index=False)
+    op1 = df_quiz[df_quiz.index == rnd_quiz].Opzione1.to_string(index=False)
+    op2 = df_quiz[df_quiz.index == rnd_quiz].Opzione2.to_string(index=False)
+    op3 = df_quiz[df_quiz.index == rnd_quiz].Opzione3.to_string(index=False)
+    risposta = op1 = df_quiz[df_quiz.index == rnd_quiz].Risposte.to_string(index=False)
+    return render_template("quiz.html", domanda = domanda, opzione1 = op1, opzione2 = op2, opzione3 = op3)
+
+@app.route("/quiz/controllo",methods=["GET"])
+def conferma_risposta():
+    scelta = request.args["scelta"]
+    if scelta == risposta:
+        session['points'] += 500
+        credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
+        credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
+        return redirect(url_for("quiz"))
+    else:
+        return "<h1>Risposta errata</h1>"
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3245, debug=True)

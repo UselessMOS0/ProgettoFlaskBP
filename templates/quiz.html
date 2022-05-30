@@ -1,20 +1,83 @@
 <html>
 
     <head>
+        <style>
 
+            body{
+                font-size: 22px;
+            }
+
+            #formquiz {
+                width: 40%;
+                height: 40%;
+                border-radius: 5px;
+                border: 2px solid rgb(230, 218, 218);  
+                box-shadow: 10px 10px 5px #dedede;
+            }
+            
+            #domanda{
+                font-size: 22px;
+                margin-left: 2.5%;
+                margin-right: auto;
+                left: 0;
+                right: 0;
+                margin-top: 2.5%;
+            }
+
+            .opzione{
+                width: 95%;
+                height: 10%;
+                border-radius: 5px;
+                margin-left: auto;
+                margin-right: auto;
+                left: 0;
+                right: 0;
+                margin-top: 10px;
+                box-shadow: 5px 5px 5px #dedede;
+                border: 2px solid rgb(230, 218, 218);  
+            }
+
+            #conferma{
+                font-size: 22px;
+                width: 20%;
+                height: 10%;
+                border-radius: 5px;
+                margin-left: 2.5%;
+                margin-right: auto;
+                left: 0;
+                right: 0;
+                margin-top: 0%;
+                box-shadow: 5px 5px 5px #dedede;
+                border: 2px solid rgb(230, 218, 218); 
+            }
+
+            #conferma:hover{
+                background-color: #4895ef;
+                color: white;
+                cursor: pointer;
+            }
+        </style>
     </head>
 
     <body>
 
-        <form action="/quiz/controllo" method="GET">
+        <form action="/quiz/controllo" method="GET" id="formquiz">
             <div>
-                <p>{{domanda}}</p>
-
-                <input type="radio" name="scelta" value="{{opzione1}}">{{opzione1}}<br>
-                <input type="radio" name="scelta" value="{{opzione2}}">{{opzione2}}<br>
-                <input type="radio" name="scelta" value="{{opzione3}}">{{opzione3}}<br>
-
-                <p><input type = "submit" value = "Submit"></p>
+                <h4 id="domanda">{{domanda}}</h4>
+                <div class="opzione">
+                    <input type="radio" name="scelta" value="{{opzione1}}" >{{opzione1}}
+                </div>
+                <div class="opzione">
+                    <input type="radio" name="scelta" value="{{opzione2}}" >{{opzione2}}
+                </div>
+                <div class="opzione">
+                    <input type="radio" name="scelta" value="{{opzione3}}" >{{opzione3}}<br>
+                </div>
+                <div class="opzione">
+                    <input type="radio" name="scelta" value="{{opzione4}}" >{{opzione4}}<br>
+                </div>
+         
+                <p><input type = "submit" value = "Conferma" id="conferma"></p>
             </div>
         </form>
                 

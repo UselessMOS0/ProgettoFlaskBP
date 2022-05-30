@@ -334,14 +334,15 @@ def quiz():
     op1 = df_quiz[df_quiz.index == rnd_quiz].Opzione1.to_string(index=False)
     op2 = df_quiz[df_quiz.index == rnd_quiz].Opzione2.to_string(index=False)
     op3 = df_quiz[df_quiz.index == rnd_quiz].Opzione3.to_string(index=False)
-    risposta = op1 = df_quiz[df_quiz.index == rnd_quiz].Risposte.to_string(index=False)
-    return render_template("quiz.html", domanda = domanda, opzione1 = op1, opzione2 = op2, opzione3 = op3)
+    op4 = df_quiz[df_quiz.index == rnd_quiz].Opzione4.to_string(index=False)
+    risposta = df_quiz[df_quiz.index == rnd_quiz].Risposte.to_string(index=False)
+    return render_template("quiz.html", domanda = domanda, opzione1 = op1, opzione2 = op2, opzione3 = op3, opzione4 = op4)
 
 @app.route("/quiz/controllo",methods=["GET"])
 def conferma_risposta():
     scelta = request.args["scelta"]
     if scelta == risposta:
-        session['points'] += 500
+        session['points'] += 50
         credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
         credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
         return redirect(url_for("quiz"))

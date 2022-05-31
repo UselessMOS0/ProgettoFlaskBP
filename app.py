@@ -28,10 +28,6 @@ comuni = gpd.read_file("/workspace/ProgettoFlaskBP/static/Files/Comuni.zip")
 popolazione = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/popolazione.csv")
 covid = pd.read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-latest.csv")
 df_quiz = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/quiz.csv")
-lista = []
-giuste = 0 
-sbagliate = 0 
-contatore = 1
 
 #? ROUTE
 #? ROUTE HOME PAGE
@@ -102,11 +98,10 @@ def logout():
 
 @app.route("/home", methods=["GET"])
 def home():
-    global contatore, lista, giuste, sbagliate
-    lista = []
-    contatore = 1
-    giuste = 0 
-    sbagliate = 0 
+    session["lista"] = []
+    session["contatore"] = 1
+    session["giuste"] = 0 
+    session["sbagliate"] = 0 
     if not session.get('username'):
         return redirect(url_for('login'))
 
@@ -161,24 +156,24 @@ def inforeg(regione):
         return redirect(url_for('login'))
 
     global reg, regioneUtente, province_reg
-    reg = regione
-    regioneUtente = regioni[regioni["DEN_REG"] == reg]
-    perimetro = round(regioneUtente.geometry.length,3)
-    area = round(regioneUtente["Shape_Area"] / 10**9,3)
-    province_reg = province[province.within(regioneUtente.geometry.squeeze())]
+    session["reg"] = regione
+    session["regioneUtente"] = regioni[regioni["DEN_REG"] == session["reg"]]
+    perimetro = round(session["regioneUtente"].geometry.length,3)
+    area = round(session["regioneUtente"]["Shape_Area"] / 10**9,3)
+    session["province_reg"] = province[province.within(session["regioneUtente"].geometry.squeeze())]
 #    comuni_reg = comuni[comuni.within(regioneUtente.geometry.squeeze())]
 #    print(comuni_reg)
-    popolazione_reg = popolazione[popolazione["Regione"] == reg]
-    covid_reg = covid[covid["denominazione_regione"] == reg]
-    return render_template("info.html", regione=regione, perimetro=perimetro.values[0], area=area.values[0] ,province=province_reg['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = covid_reg["casi_testati"].values[0],username = session['username'],points = session['points'])
+    popolazione_reg = popolazione[popolazione["Regione"] == session["reg"]]
+    covid_reg = covid[covid["denominazione_regione"] == session["reg"]]
+    return render_template("info.html", regione=regione, perimetro=perimetro.values[0], area=area.values[0] ,province=session["province_reg"]['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = covid_reg["casi_testati"].values[0],username = session['username'],points = session['points'])
 
 
 @app.route("/regione.png", methods=["GET"])
 def regione_png():
     fig, ax = plt.subplots(figsize = (10,6))
 
-    regioneUtente.to_crs(epsg=3857).plot(ax=ax, alpha=0.5, edgecolor="k")
-    province_reg.to_crs(epsg=3857).plot(ax=ax, alpha=0.5, edgecolor="k")
+    session["regioneUtente"].to_crs(epsg=3857).plot(ax=ax, alpha=0.5, edgecolor="k")
+    session["province_reg"].to_crs(epsg=3857).plot(ax=ax, alpha=0.5, edgecolor="k")
     contextily.add_basemap(ax=ax)   
 
     output = io.BytesIO()
@@ -207,14 +202,13 @@ def popolazione_png():
 
 ''' 
 
-
 @app.route("/grafici.png", methods=["GET"])
 def grafici_png():
     fig, (ax1,ax2) = plt.subplots(1,2,figsize = (20,8))
 
-    posizione_pop = popolazione[popolazione["Regione"] == reg].index.values[0]
+    posizione_pop = popolazione[popolazione["Regione"] == session["reg"]].index.values[0]
     ax1.bar(popolazione["Regione"], popolazione["Popolazione_totale"])[posizione_pop].set_color("r")
-    posizione_cov = covid[covid["denominazione_regione"] == reg].index.values[0]
+    posizione_cov = covid[covid["denominazione_regione"] == session["reg"]].index.values[0]
     ax2.bar(covid["denominazione_regione"], covid["casi_testati"])[posizione_cov].set_color("r")
     fig.autofmt_xdate(rotation=45)
     
@@ -343,41 +337,38 @@ def conferma_province():
 
 @app.route("/quiz", methods=["GET"])
 def quiz():
-    global contatore, lista, giuste, sbagliate
 
-    if contatore > 5:
-        session['points'] += giuste * 5
+    if session["contatore"] > 5:
+        session['points'] += session["giuste"] * 5
         credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
         credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
-        return render_template("fine.html", giuste = giuste, sbagliate = sbagliate)
+        return render_template("fine.html", giuste = session["giuste"], sbagliate = session["sbagliate"])
     else:
         rnd_quiz = rnd.randrange(len(df_quiz))
-        while rnd_quiz in lista:
+        while rnd_quiz in session["lista"]:
             rnd_quiz = rnd.randrange(len(df_quiz))
 
-        lista.append(rnd_quiz)
-        print(lista)
+        session["lista"].append(rnd_quiz)
         domanda = df_quiz[df_quiz.index == rnd_quiz].Domande.to_string(index=False)
         op1 = df_quiz[df_quiz.index == rnd_quiz].Opzione1.to_string(index=False)
         op2 = df_quiz[df_quiz.index == rnd_quiz].Opzione2.to_string(index=False)
         op3 = df_quiz[df_quiz.index == rnd_quiz].Opzione3.to_string(index=False)
         op4 = df_quiz[df_quiz.index == rnd_quiz].Opzione4.to_string(index=False)
         session["risposta"] = df_quiz[df_quiz.index == rnd_quiz].Risposte.to_string(index=False)
-        return render_template("quiz.html", domanda = domanda, opzione1 = op1, opzione2 = op2, opzione3 = op3, opzione4 = op4,numero=contatore)
+        return render_template("quiz.html", domanda = domanda, opzione1 = op1, opzione2 = op2, opzione3 = op3, opzione4 = op4,numero=session["contatore"] )
 
 @app.route("/quiz/controllo",methods=["GET"])
 def conferma_risposta():
-    global contatore, giuste, sbagliate
-    contatore = contatore + 1
+    session["contatore"] += 1
     scelta = request.args["scelta"]
     if scelta == session["risposta"]:
-        giuste = giuste + 1 
+        session["giuste"] += 1 
        # session['points'] += 5
        # credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
        # credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
         return redirect(url_for("quiz"))
     else:
-        sbagliate = sbagliate + 1 
+        session["sbagliate"] += 1 
         return redirect(url_for("quiz"))
         
 

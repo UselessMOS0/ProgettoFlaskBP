@@ -159,14 +159,15 @@ def info():
 def inforeg(regione):
     if not session.get('username'):
         return redirect(url_for('login'))
-#   global popolazione_reg, reg, regioneUtente, province_reg, covid_reg
+
     global reg, regioneUtente, province_reg
-    print(regioni)
     reg = regione
     regioneUtente = regioni[regioni["DEN_REG"] == reg]
     perimetro = round(regioneUtente.geometry.length,3)
     area = round(regioneUtente["Shape_Area"] / 10**9,3)
     province_reg = province[province.within(regioneUtente.geometry.squeeze())]
+#    comuni_reg = comuni[comuni.within(regioneUtente.geometry.squeeze())]
+#    print(comuni_reg)
     popolazione_reg = popolazione[popolazione["Regione"] == reg]
     covid_reg = covid[covid["denominazione_regione"] == reg]
     return render_template("info.html", regione=regione, perimetro=perimetro.values[0], area=area.values[0] ,province=province_reg['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = covid_reg["casi_testati"].values[0],username = session['username'],points = session['points'])
@@ -379,6 +380,10 @@ def conferma_risposta():
         sbagliate = sbagliate + 1 
         return redirect(url_for("quiz"))
         
+
+@app.route("/nice", methods=["GET"])
+def nice():
+    return redirect(url_for("home"))
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3245, debug=True)

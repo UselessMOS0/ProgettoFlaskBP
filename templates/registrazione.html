@@ -104,7 +104,7 @@
     <form action="/registrazione" method="POST" id="regform">
         <div>
             <h1 id="registrati">Registrati</h1>
-            <input type="email" name="Email" id="email" required placeholder=" Inserisci l'email" >
+            <input type="email" name="Email" id="email" required placeholder=" Inserisci l'email" pattern="^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$">
             <input type="text" name="Username" id="username" required placeholder=" Inserisci l'username"><br>
             <input type="password" name="Password" id="password" required placeholder=" Inserisci la password"><br>
             <input type="password" name="Conf_password" id="password2" required placeholder=" Conferma la password">

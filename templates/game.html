@@ -11,6 +11,25 @@
             right: 0;
             text-align: center;
         }
+        
+        #bottone{
+                background-color: #04AA6D;
+                margin-top: 39%;
+                border-radius: 10px;
+                height: 5vh;
+                width: 7vw;
+                font-size: 20px;
+                right: 5%;
+                font-weight: bold;
+                position: absolute;
+                transform: translate(-50%,-50%);
+                transition-duration: 300ms;
+            }
+            #bottone:hover{
+                background-color: #4895ef;
+                color: white;
+                cursor: pointer;
+            }
     </style>
 </head>
 <body>
@@ -18,4 +37,5 @@
     <div id="map"> 
         {{map|safe}}
     </div>
+    <a href="/nice"><button id="bottone">Home</button></a>
 </body>

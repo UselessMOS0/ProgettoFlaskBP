@@ -29,7 +29,9 @@ popolazione = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/popolazione.c
 covid = pd.read_csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-latest.csv")
 df_quiz = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/quiz.csv")
 lista = []
-
+giuste = 0 
+sbagliate = 0 
+contatore = 1
 
 #? ROUTE
 #? ROUTE HOME PAGE
@@ -52,7 +54,7 @@ def login():
     elif request.method == "POST":
         username = request.form['Username']
         password = request.form['Password']
-
+        
         for index,c in credenziali.iterrows():
             if username == c["Username"] and password == c["Password"]:
                 session['username'] = username
@@ -100,9 +102,15 @@ def logout():
 
 @app.route("/home", methods=["GET"])
 def home():
+    global contatore, lista, giuste, sbagliate
+    lista = []
+    contatore = 1
+    giuste = 0 
+    sbagliate = 0 
     if not session.get('username'):
         return redirect(url_for('login'))
 
+    credenziali = pd.read_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv')
     for index,c in credenziali.iterrows():
         if session['username'] == c.Username:
             session['points'] = int(c.Points)
@@ -163,7 +171,7 @@ def inforeg(regione):
     covid_reg = covid[covid["denominazione_regione"] == reg]
     return render_template("info.html", regione=regione, perimetro=perimetro.values[0], area=area.values[0] ,province=province_reg['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = covid_reg["casi_testati"].values[0],username = session['username'],points = session['points'])
 
-'''
+
 @app.route("/regione.png", methods=["GET"])
 def regione_png():
     fig, ax = plt.subplots(figsize = (10,6))
@@ -175,7 +183,7 @@ def regione_png():
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
-'''
+
 '''
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
@@ -183,7 +191,7 @@ def regione_png():
     plt.close(fig)
     return Response(result, mimetype='image/png') '''
 
-
+'''
 @app.route("/popolazione.png", methods=["GET"])
 def popolazione_png():
     fig, ax = plt.subplots(figsize = (12,8))
@@ -195,14 +203,25 @@ def popolazione_png():
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
+
+''' 
+
+
+@app.route("/grafici.png", methods=["GET"])
+def grafici_png():
+    fig, (ax1,ax2) = plt.subplots(1,2,figsize = (20,8))
+
+    posizione_pop = popolazione[popolazione["Regione"] == reg].index.values[0]
+    ax1.bar(popolazione["Regione"], popolazione["Popolazione_totale"])[posizione_pop].set_color("r")
+    posizione_cov = covid[covid["denominazione_regione"] == reg].index.values[0]
+    ax2.bar(covid["denominazione_regione"], covid["casi_testati"])[posizione_cov].set_color("r")
+    fig.autofmt_xdate(rotation=45)
     
-'''  
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
-    result = output.getvalue()
-    plt.close(fig)
-    return Response(result, mimetype='image/png') '''
-
+    return Response(output.getvalue(), mimetype='image/png')
+    
+'''
 @app.route("/covid.png", methods=["GET"])
 def covid_png():
     fig, ax = plt.subplots(figsize = (12,8))
@@ -214,7 +233,7 @@ def covid_png():
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')   
-
+'''
 #?--------------------------------------------------------------------
 #?--------------------------------------------------------------------
 
@@ -260,7 +279,7 @@ def conferma_mondo():
     if paese == random:
         risultato = "La risposta è corretta"
         
-        session['points'] += 500
+        session['points'] += 50
         credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
         credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
 
@@ -307,7 +326,7 @@ def conferma_province():
     if provincia == random:
         risultato = "La risposta è corretta"
 
-        session['points'] += 500
+        session['points'] += 50
         credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
         credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
 
@@ -323,31 +342,43 @@ def conferma_province():
 
 @app.route("/quiz", methods=["GET"])
 def quiz():
-    global  risposta
-    rnd_quiz = rnd.randrange(len(df_quiz)-1)
-    while rnd_quiz in lista:
-        rnd_quiz = rnd.randrange(len(df_quiz)-1)
+    global contatore, lista, giuste, sbagliate
 
-    lista.append(rnd_quiz)
-    print(lista)
-    domanda = df_quiz[df_quiz.index == rnd_quiz].Domande.to_string(index=False)
-    op1 = df_quiz[df_quiz.index == rnd_quiz].Opzione1.to_string(index=False)
-    op2 = df_quiz[df_quiz.index == rnd_quiz].Opzione2.to_string(index=False)
-    op3 = df_quiz[df_quiz.index == rnd_quiz].Opzione3.to_string(index=False)
-    op4 = df_quiz[df_quiz.index == rnd_quiz].Opzione4.to_string(index=False)
-    risposta = df_quiz[df_quiz.index == rnd_quiz].Risposte.to_string(index=False)
-    return render_template("quiz.html", domanda = domanda, opzione1 = op1, opzione2 = op2, opzione3 = op3, opzione4 = op4)
+    if contatore > 5:
+        session['points'] += giuste * 5
+        credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
+        credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
+        return render_template("fine.html", giuste = giuste, sbagliate = sbagliate)
+    else:
+        rnd_quiz = rnd.randrange(len(df_quiz))
+        while rnd_quiz in lista:
+            rnd_quiz = rnd.randrange(len(df_quiz))
+
+        lista.append(rnd_quiz)
+        print(lista)
+        domanda = df_quiz[df_quiz.index == rnd_quiz].Domande.to_string(index=False)
+        op1 = df_quiz[df_quiz.index == rnd_quiz].Opzione1.to_string(index=False)
+        op2 = df_quiz[df_quiz.index == rnd_quiz].Opzione2.to_string(index=False)
+        op3 = df_quiz[df_quiz.index == rnd_quiz].Opzione3.to_string(index=False)
+        op4 = df_quiz[df_quiz.index == rnd_quiz].Opzione4.to_string(index=False)
+        session["risposta"] = df_quiz[df_quiz.index == rnd_quiz].Risposte.to_string(index=False)
+        return render_template("quiz.html", domanda = domanda, opzione1 = op1, opzione2 = op2, opzione3 = op3, opzione4 = op4,numero=contatore)
 
 @app.route("/quiz/controllo",methods=["GET"])
 def conferma_risposta():
+    global contatore, giuste, sbagliate
+    contatore = contatore + 1
     scelta = request.args["scelta"]
-    if scelta == risposta:
-        session['points'] += 50
-        credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
-        credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
+    if scelta == session["risposta"]:
+        giuste = giuste + 1 
+       # session['points'] += 5
+       # credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
+       # credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
         return redirect(url_for("quiz"))
     else:
-        return "<h1>Risposta errata</h1>"
+        sbagliate = sbagliate + 1 
+        return redirect(url_for("quiz"))
+        
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3245, debug=True)

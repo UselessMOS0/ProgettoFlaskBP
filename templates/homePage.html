@@ -13,7 +13,7 @@
               margin: 0;
               padding: 0;
               overflow: hidden;
-              background-color: #333;
+              background-color: #090d0c;
               position: fixed;
               top: 0;
               width: 100%;
@@ -33,7 +33,7 @@
             }
 
             li a:hover:not(.active) {
-              background-color: #111;
+              background-color: rgb(31, 30, 30);
             }
 
             .active {
@@ -51,7 +51,7 @@
 
             #logo{
               position: absolute;
-              left: 58%;
+              left: 59%;
               top: 37%;
               transform: translate(-50%,-50%);
             }
@@ -79,7 +79,7 @@
           .img_div{
             width: calc(100% - 60px);
             height: 32%; 
-            padding: 30px;
+            padding: 2%;
             background-color: #35633e;
           }
 
@@ -95,8 +95,37 @@
 
           #img_right{
             position: absolute;
-            right: 30px;
+            right: 2%;
             background-color: white;
+          }
+          #frase{
+            text-align: center;
+          }
+
+          #txt1{
+            width: 30%;
+            position: absolute;
+            right: 20%;
+            top: 110%;
+          }
+          #txt2{
+            width: 30%;
+            position: absolute;
+            left: 20%;
+            top: 150%;
+          }
+
+          #txt3{
+            width: 30%;
+            position: absolute;
+            right: 20%;
+            top: 190%;
+          }
+
+          #contatti{
+            width: 100%;
+            height: 20%;
+            background-color: #090d0c;
           }
 
             </style>
@@ -108,15 +137,15 @@
           <ul>
             <li><a class="active" href="#home">Home</a></li>
             <li><a href="#img_high">Modalità</a></li>
-            <li><a href="#contact">Contatti</a></li>
+            <li><a href="#contatti">Contatti</a></li>
           </ul>
       </div>
 
       <div id="home">
         <img src="/static/img/SfondoLogReg.jpg" alt="immagine" style="width:100%; height: 100%;">
         <div id="centerhome">
-          <p>IMPARA, METTITI ALLA PROVA E GIOCA <br>
-          Questo sito ti permetterà di informarti e divertirti allo stesso tempo</p>   
+          <h2 id="frase">IMPARA, METTITI ALLA PROVA E GIOCA</h2> 
+
         </div>
 
         <div id="logo">
@@ -129,12 +158,22 @@
 
       <div class="img_div">
         <a href="/home"> <img src="static/img/lente.jpg" alt="Img1" class="img" id="img_high" >  </a>
+        <h1 id="txt1">Non smettere mai di imparare, clicca su un regione a tua scelta e impara</h1>
       </div>
+      
       <div class="img_div"> 
           <a href="/home"> <img src="/static/img/punto.png" alt="Img2" class="img" id="img_right">  </a>
+          <h1 id="txt2">Mettiti alla prova e vedi se sai rispondere correttamente a tutte le domande</h1>
       </div>
+      
       <div class="img_div">
         <a href="/home" > <img src="static/img/mondo.png" alt="Img3" class="img" >  </a>
+        <h1 id="txt3">Divertiti, trova la posizione esatta sulla cartina di uno stato o di una provincia generata casualmente </h2>
+      </div>
+      
+
+      <div id="contatti">
+
       </div>
 
     </body>

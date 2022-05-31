@@ -1,14 +1,75 @@
 <html>
     <head>
+        <style>
+            body{
+                background-image: url('/static/img/SfondoLogReg.jpg');
+                background-size: cover;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: sans-serif;
+                font-size: 22px;
+                color: rgb(255, 255, 255);
+            }
+            #fine{
+                width: 20%;
+                height: 25%;
+                border-radius: 35px;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                margin-left: auto;
+                margin-right: auto;
+                left: 0;
+                right: 0;
+                top: 30%;
+                text-align: center;    
+                background: #020202b0;
+                border: 3px solid rgb(255, 255, 255);
+            }
+            #text{
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                margin-left: auto;
+                margin-right: auto;
+                left: 0;
+                right: 0;
+                top: 10%;
+                text-align: center;  
+            }
+            #bottone{
+                background-color: #04AA6D;
+                margin-top: 10px;
+                border-radius: 10px;
+                height: 5vh;
+                width: 7vw;
+                font-size: 20px;
+                font-weight: bold;
+                position: absolute;
+                transform: translate(-50%,-50%);
+                transition-duration: 300ms;
+            }
+            #bottone:hover{
+                background-color: #4895ef;
+                color: white;
+                cursor: pointer;
+            }
 
+        </style>
     </head>
 
     <body>
         <div id="fine">
-            HAI RISPOSTO A TUTTE LE DOMANDE <br>
-            Risposte corrette: {{giuste}} <br>
-            Risposte sbagliate: {{sbagliate}}
-            <a href="/home"><button>Fine</button></a>
+            <div id="text">
+                HAI RISPOSTO A TUTTE LE DOMANDE <br>
+                Risposte corrette: {{giuste}} <br>
+                Risposte sbagliate: {{sbagliate}} <br> <br>
+                <a href="/home"><button id="bottone">Fine</button></a>
+            </div>
+
         </div>
 
     </body>

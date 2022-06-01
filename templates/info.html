@@ -3,26 +3,51 @@
         #titolo {
             text-align: center;
         }
+        #top{
+            width: 100%;
+            height: 40%;
+            display: flex;
+            justify-content: center;
+        }
+        #province {
+            margin: 30px;
+            border: 2px solid black;
+            border-radius: 10px;
+            font-size: 20px;
+        }
+        #ciao {
+            margin: 30px;
+            border: 2px solid black;
+            border-radius: 10px;
+            font-size: 20px;
+            width: 15%;
+            height: 20%;
+
+        }
+
     </style>
 </head>
 <body>
     <h1 id="titolo">Regione {{regione}}</h1>
-    <div id="img_regione">
-        <img src="/regione.png" alt="immagine" loading="lazy">
+    <div id="top">
+            <img src="/regione.png" alt="immagine" loading="lazy">
+            <div id="ciao">
+                <ul>
+                   <li> Ha un area di {{area}} km2</li>
+                   <li> Abitanti: {{popolazione}}</li>
+                   <li>Casi covid: {{covid}}</li>
+                </ul>
+            </div>
+        <div id="province">
+                <ul>
+                    Le province della {{regione}} sono:
+                    {% for p in province%}
+                        <li>{{p}}</li>
+                    {%endfor%}
+                </ul>
+        </div>
     </div>
-    <h3>Ha un area di {{area}} km2</h3>
-    <h3>In {{regione}} sono presenti {{popolazione}} abitanti</h3><br>
-    <h3>In {{regione}} fino ad oggi ci sono stati {{covid}} casi di covid</h3><br>
-    <div id="province">
-        <h3>Le province della {{regione}} sono:
-            <ul>
-                {% for p in province%}
-                    <li>{{p}}</li>
-                {%endfor%}
-            </ul>
-        </h3>
-    </div>
-    <div id="img_popolazione">
+    <div id="grafici">
         <img src="/grafici.png" alt="grafico" >
     </div>
 

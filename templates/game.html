@@ -1,6 +1,67 @@
 
 <head>
     <style>
+        
+        body {
+            margin: 0px;
+            font-family: sans-serif;
+        }
+
+
+
+        #top {
+            height: 7vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+            background-color: #76c893;
+            align-items: center;
+            font-family: sans-serif;
+            font-weight: bold;
+            color: black;
+        }
+        
+        #logo {
+            left: 10px;
+            border: none;
+            height: 7vh;
+            width: 10%;
+        }
+        
+        #logo img{
+            border: none;
+            height: 7vh;
+            width: 100%;
+        }
+
+        #name {
+            position: absolute;
+            font-size: 3vh;
+            right: 9vw;
+        }
+        
+        #logout {
+            width:
+             5vw;
+            height: 3vh;
+            font-size: 1.7vh;
+            text-decoration: none;
+            position: absolute;
+            right: 0px;
+            margin-right: 0.5vw;
+            color: black;
+            border: 2px solid white;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #points {
+            position: absolute;
+            font-size: 3vh;
+            right: 6vw;}
+        
         #map{
             width: 60%;
             height: 50%;
@@ -14,7 +75,7 @@
         
         #bottone{
                 background-color: #04AA6D;
-                margin-top: 39%;
+                margin-top: 37%;
                 border-radius: 10px;
                 height: 5vh;
                 width: 7vw;
@@ -33,9 +94,15 @@
     </style>
 </head>
 <body>
+    <div id="top">
+        <a href="/logout" id="logout"> Logout</a>
+        <p id="name">Benvenuto {{username}}!</p>
+        <p id="points">{{points}}</p>
+        <a href="/home" id="logo"><img src="/static/img/logo2.png" alt="logo"></a>
+    </div>
     <h1>{{titolo}}</h1> <h1>{{indovina}} {{rndnome}}</h1>
     <div id="map"> 
         {{map|safe}}
     </div>
-    <a href="/nice"><button id="bottone">Home</button></a>
+    <a href="/home"><button id="bottone">Home</button></a>
 </body>

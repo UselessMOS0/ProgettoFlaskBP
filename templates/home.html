@@ -22,7 +22,19 @@
             font-weight: bold;
             color: black;
         }
-
+        
+        #logo {
+            left: 10px;
+            border: none;
+            height: 7vh;
+            width: 10%;
+        }
+        
+        #logo img{
+            border: none;
+            height: 7vh;
+            width: 100%;
+        }
 
         #name {
             position: absolute;
@@ -122,16 +134,17 @@
         <a href="/logout" id="logout"> Logout</a>
         <p id="name">Benvenuto {{username}}!</p>
         <p id="points">{{points}}</p>
+        <a href="/home" id="logo"><img src="/static/img/logo2.png" alt="logo"></a>
     </div>
     <div id="main">
         <div>
-            <a href="/info"> <img src="static/img/lente.jpg" alt="Img1" id="img1"> <p id="txt1">info</p> </a>
+            <a href="/info"> <img src="static/img/lente.jpg" alt="Img1" id="img1"> <p id="txt1">Informazioni</p> </a>
         </div>
         <div>
-            <a href="/quiz"> <img src="/static/img/punto.png" alt="Img2" id="img2"> <p id="txt2">quiz</p> </a>
+            <a href="/quiz"> <img src="/static/img/punto.png" alt="Img2" id="img2"> <p id="txt2">Quiz</p> </a>
         </div>
         <div id="center">
-            <a href="/game" > <img src="static/img/mondo.png" alt="Img3" id="img3"> <p id="txt3">game</p> </a>
+            <a href="/game" > <img src="static/img/mondo.png" alt="Img3" id="img3"> <p id="txt3">Minigioco</p> </a>
         </div>
     </div>
 </body>

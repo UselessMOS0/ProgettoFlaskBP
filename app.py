@@ -51,6 +51,7 @@ def login():
         username = request.form['Username']
         password = request.form['Password']
         
+        # CONTROLLO DELL'ESESISTENZA DELL'USERNAME E DELLA PASSWORD
         for index,c in credenziali.iterrows():
             if username == c["Username"] and password == c["Password"]:
                 session['username'] = username
@@ -70,10 +71,12 @@ def registrazione():
         password = request.form['Password']
 
         global credenziali
-
+        
+        # CONTROLLO DELLA PRESENZA DI UN USERNAME UGUALE A QUELLA INSERITA 
         if username in credenziali["Username"].tolist():
             return redirect(url_for("registrazione"))
         else:
+            # SALVATAGGIO DEI DATI NEL FILE CSV
             utente = {"Email":email,"Username": username,"Password":password,"Points":'0'}
             credenziali = credenziali.append(utente,ignore_index=True)    
             credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
@@ -106,6 +109,7 @@ def home():
         return redirect(url_for('login'))
 
     credenziali = pd.read_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv')
+
     for index,c in credenziali.iterrows():
         if session['username'] == c.Username:
             session['points'] = int(c.Points)
@@ -125,14 +129,8 @@ def home():
 def info():
     if not session.get('username'):
         return redirect(url_for('login'))
-    '''
-    m = folium.Map(location=[41,12], zoom_start=6.4)
 
-    for reg in regioni.DEN_REG.tolist():
-        url = str(url_for("inforeg", regione=reg))
-        folium.Marker([regioni[regioni.DEN_REG == reg].centroid.y,regioni[regioni.DEN_REG == reg].centroid.x], popup=f"<a href={url}>{reg}</a>").add_to(m)
-'''
-
+    # CREAZIONE DELLA MAPPA FOLIUM
     folinfo = folium.Map(location=[41,12], max_bounds=True, zoom_start=7 , min_zoom=4)
     
 
@@ -146,7 +144,7 @@ def info():
         ).add_to(geo_j)
         geo_j.add_to(folinfo)
     
-    return folinfo._repr_html_()
+    return render_template("mapit.html",map=folinfo._repr_html_(),username = session['username'],points = session['points'])
 
 
 
@@ -155,21 +153,20 @@ def inforeg(regione):
     if not session.get('username'):
         return redirect(url_for('login'))
 
-    global reg, regioneUtente, province_reg
     session["reg"] = regione
     session["regioneUtente"] = regioni[regioni["DEN_REG"] == session["reg"]]
-    perimetro = round(session["regioneUtente"].geometry.length,3)
     area = round(session["regioneUtente"]["Shape_Area"] / 10**9,3)
     session["province_reg"] = province[province.within(session["regioneUtente"].geometry.squeeze())]
-#    comuni_reg = comuni[comuni.within(regioneUtente.geometry.squeeze())]
-#    print(comuni_reg)
+
     popolazione_reg = popolazione[popolazione["Regione"] == session["reg"]]
     covid_reg = covid[covid["denominazione_regione"] == session["reg"]]
-    return render_template("info.html", regione=regione, perimetro=perimetro.values[0], area=area.values[0] ,province=session["province_reg"]['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = covid_reg["casi_testati"].values[0],username = session['username'],points = session['points'])
+    return render_template("info.html", regione=regione, area=area.values[0] ,province=session["province_reg"]['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = covid_reg["casi_testati"].values[0],username = session['username'],points = session['points'])
 
-
+# CREAZIONE MAPPA DELLA REGIONE CLICCATA DALL'UTENTE
 @app.route("/regione.png", methods=["GET"])
 def regione_png():
+    if not session.get('username'):
+        return redirect(url_for('login'))
     fig, ax = plt.subplots(figsize = (10,6))
 
     session["regioneUtente"].to_crs(epsg=3857).plot(ax=ax, alpha=0.5, edgecolor="k")
@@ -180,55 +177,31 @@ def regione_png():
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
 
-'''
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-    result = output.getvalue()
-    plt.close(fig)
-    return Response(result, mimetype='image/png') '''
 
-'''
-@app.route("/popolazione.png", methods=["GET"])
-def popolazione_png():
-    fig, ax = plt.subplots(figsize = (12,8))
-
-    posizione = popolazione[popolazione["Regione"] == reg].index.values[0]
-    ax.bar(popolazione["Regione"], popolazione["Popolazione_totale"])[posizione].set_color("r")
-    fig.autofmt_xdate(rotation=45)
-    
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
-
-''' 
-
+# CREAZIONE DEI GRAFICI SULLA POPOLAZIONE E IL COVID
 @app.route("/grafici.png", methods=["GET"])
 def grafici_png():
-    fig, (ax1,ax2) = plt.subplots(1,2,figsize = (20,8))
+    if not session.get('username'):
+        return redirect(url_for('login'))
+    fig, (ax1,ax2) = plt.subplots(1,2,figsize = (18,8))
 
+    # CREAZIONE GRAFICO POPOLAZIONE PER REGIONE 
     posizione_pop = popolazione[popolazione["Regione"] == session["reg"]].index.values[0]
     ax1.bar(popolazione["Regione"], popolazione["Popolazione_totale"])[posizione_pop].set_color("r")
+    ax1.set_title('Popolazione')
+
+    # CREAZIONE GRAFICO CASI COVID PER REGIONE 
+    ax2.set_title('Covid')
     posizione_cov = covid[covid["denominazione_regione"] == session["reg"]].index.values[0]
     ax2.bar(covid["denominazione_regione"], covid["casi_testati"])[posizione_cov].set_color("r")
+
     fig.autofmt_xdate(rotation=45)
     
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
     return Response(output.getvalue(), mimetype='image/png')
     
-'''
-@app.route("/covid.png", methods=["GET"])
-def covid_png():
-    fig, ax = plt.subplots(figsize = (12,8))
 
-    posizione = covid[covid["denominazione_regione"] == reg].index.values[0]
-    ax.bar(covid["denominazione_regione"], covid["casi_testati"])[posizione].set_color("r")
-    fig.autofmt_xdate(rotation=45)
-    
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')   
-'''
 #?--------------------------------------------------------------------
 #?--------------------------------------------------------------------
 
@@ -247,9 +220,12 @@ def game():
 def gamemondo():
     if not session.get('username'):
         return redirect(url_for('login'))
+
+    # GENERAZIONE CASUALE DI UN PAESE
     rndpaese = rnd.randrange(len(mondo)-1)
     rndpaese = mondo[mondo.index == rndpaese].name.to_string(index=False)
 
+    # CREAZIONE DELLA MAPPA FOLIUM 
     folmondo = folium.Map(location=[19.14,-12.56], max_bounds=True, zoom_start=3 , min_zoom=2.8, tiles='stamenwatercolor')
     
 
@@ -263,6 +239,7 @@ def gamemondo():
 
     return render_template("game.html",titolo = "MINIGIOCO SUGLI STATI DEL MONDO" , map = folmondo._repr_html_(),indovina = "Indovina lo stato:" , rndnome = rndpaese,username = session['username'],points = session['points'])
 
+# CONTROLLO DELLA RISPOSTA DELL'UTENTE
 @app.route("/game/mondo/conferma", methods=["POST"])
 def conferma_mondo():
     if not session.get('username'):
@@ -271,9 +248,12 @@ def conferma_mondo():
     random = request.form["random"]
     risultato = "No, la risposta è sbagliata"
     immagine = "/static/img/errore.png"
+
+    
     if paese == random:
         risultato = "La risposta è corretta"
         
+        # AGGIUNTA DEI PUNTI 
         session['points'] += 50
         credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
         credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
@@ -296,6 +276,7 @@ def gameprovince():
     rndprov = rnd.randrange(len(province)-1)
     rndprov = province[province.index == rndprov].DEN_UTS.to_string(index=False)
     
+    # CREAZIONE DELLA MAPPA FOLIUM 
     folprov = folium.Map(location=[41,12], zoom_start=6.4, max_bounds=True, tiles='stamenwatercolor')
     
 
@@ -337,44 +318,55 @@ def conferma_province():
 
 @app.route("/quiz", methods=["GET"])
 def quiz():
+    if not session.get('username'):
+        return redirect(url_for('login'))
 
+    # CONTROLLO DEL NUMERO DI DOMANDE FATTE
     if session["contatore"] > 5:
+        # AGGIUNTA DEI PUNTI 
         session['points'] += session["giuste"] * 5
         credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
         credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
         return render_template("fine.html", giuste = session["giuste"], sbagliate = session["sbagliate"])
     else:
+        # GENERAZIONE RANDOM DELLA DOMANDA DAL FILE CSV
         rnd_quiz = rnd.randrange(len(df_quiz))
+
+        # CONTROLLO DELLA DIVERSITà DELLA DOMANDA
         while rnd_quiz in session["lista"]:
             rnd_quiz = rnd.randrange(len(df_quiz))
 
+        # AGGIUNTA DELL'INDEX DELLA DOMANDA NELLA LISTA
         session["lista"].append(rnd_quiz)
+
+        
         domanda = df_quiz[df_quiz.index == rnd_quiz].Domande.to_string(index=False)
         op1 = df_quiz[df_quiz.index == rnd_quiz].Opzione1.to_string(index=False)
         op2 = df_quiz[df_quiz.index == rnd_quiz].Opzione2.to_string(index=False)
         op3 = df_quiz[df_quiz.index == rnd_quiz].Opzione3.to_string(index=False)
         op4 = df_quiz[df_quiz.index == rnd_quiz].Opzione4.to_string(index=False)
         session["risposta"] = df_quiz[df_quiz.index == rnd_quiz].Risposte.to_string(index=False)
-        return render_template("quiz.html", domanda = domanda, opzione1 = op1, opzione2 = op2, opzione3 = op3, opzione4 = op4,numero=session["contatore"] )
+        return render_template("quiz.html", domanda = domanda, opzione1 = op1, opzione2 = op2, opzione3 = op3, opzione4 = op4,numero=session["contatore"],username = session['username'],points = session['points'] )
 
+
+# CONTROLLO DELLA RISPOSTA 
 @app.route("/quiz/controllo",methods=["GET"])
 def conferma_risposta():
+    if not session.get('username'):
+        return redirect(url_for('login'))
     session["contatore"] += 1
     scelta = request.args["scelta"]
     if scelta == session["risposta"]:
         session["giuste"] += 1 
-       # session['points'] += 5
-       # credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
-       # credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
+
         return redirect(url_for("quiz"))
     else:
         session["sbagliate"] += 1 
         return redirect(url_for("quiz"))
         
+#?--------------------------------------------------------------------
+#?--------------------------------------------------------------------
 
-@app.route("/nice", methods=["GET"])
-def nice():
-    return redirect(url_for("home"))
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3245, debug=True)

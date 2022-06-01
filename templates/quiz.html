@@ -2,11 +2,67 @@
 
     <head>
         <style>
-
-            body{
+            body {
+                margin: 0px;
+                font-family: sans-serif;
                 font-size: 22px;
             }
 
+
+
+            #top {
+                height: 7vh;
+                width: 100%;
+                position: relative;
+                display: flex;
+                background-color: #76c893;
+                align-items: center;
+                font-family: sans-serif;
+                font-weight: bold;
+                color: black;
+            }
+            
+            #logo {
+                left: 10px;
+                border: none;
+                height: 7vh;
+                width: 10%;
+            }
+            
+            #logo img{
+                border: none;
+                height: 7vh;
+                width: 100%;
+            }
+
+            #name {
+                position: absolute;
+                font-size: 3vh;
+                right: 9vw;
+            }
+            
+            #logout {
+                width:
+                5vw;
+                height: 3vh;
+                font-size: 1.7vh;
+                text-decoration: none;
+                position: absolute;
+                right: 0px;
+                margin-right: 0.5vw;
+                color: black;
+                border: 2px solid white;
+                border-radius: 5px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            #points {
+                position: absolute;
+                font-size: 3vh;
+                right: 6vw;}
+        
             #formquiz {
                 width: 40%;
                 height: 40%;
@@ -64,7 +120,12 @@
     </head>
 
     <body>
-
+        <div id="top">
+            <a href="/logout" id="logout"> Logout</a>
+            <p id="name">Benvenuto {{username}}!</p>
+            <p id="points">{{points}}</p>
+            <a href="/home" id="logo"><img src="/static/img/logo2.png" alt="logo"></a>
+        </div>
         <form action="/quiz/controllo" method="GET" id="formquiz">
             <div>
                 <h4 id="domanda">{{domanda}}</h4>

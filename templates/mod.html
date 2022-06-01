@@ -26,12 +26,24 @@
             font-weight: bold;
             color: black;
         }
+        
+        #logo {
+            left: 10px;
+            border: none;
+            height: 7vh;
+            width: 10%;
+        }
+        
+        #logo img{
+            border: none;
+            height: 7vh;
+            width: 100%;
+        }
 
-
-        #top p {
+        #name {
             position: absolute;
             font-size: 3vh;
-            right: 6vw;
+            right: 9vw;
         }
         
         #logout {
@@ -50,6 +62,11 @@
             justify-content: center;
             align-items: center;
         }
+        
+        #points {
+            position: absolute;
+            font-size: 3vh;
+            right: 6vw;}
         
         #main {
             width:92vw;
@@ -109,7 +126,9 @@
 <body>
     <div id="top">
         <a href="/logout" id="logout"> Logout</a>
-        <p>Benvenuto {{username}}!</p>
+        <p id="name">Benvenuto {{username}}!</p>
+        <p id="points">{{points}}</p>
+        <a href="/home" id="logo"><img src="/static/img/logo2.png" alt="logo"></a>
     </div>
     <div id="main">
         <div>

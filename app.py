@@ -36,6 +36,7 @@ df_quiz = pd.read_csv("/workspace/ProgettoFlaskBP/static/Files/quiz.csv")
 def home_page():
     return render_template("homePage.html")
 
+
 #!--------------------------------------------------------------------
 #!--------------------------------------------------------------------
 
@@ -105,8 +106,10 @@ def home():
     session["contatore"] = 1
     session["giuste"] = 0 
     session["sbagliate"] = 0 
+
     if not session.get('username'):
-        return redirect(url_for('login'))
+        return render_template("home.html", link="/login", scritta="Login")
+
 
     credenziali = pd.read_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv')
 
@@ -114,7 +117,7 @@ def home():
         if session['username'] == c.Username:
             session['points'] = int(c.Points)
 
-    return render_template("home.html",username = session['username'],points = session['points'])
+    return render_template("home.html",username = session['username'],points = session['points'], link="/logout", scritta="Logout")
 
 #?--------------------------------------------------------------------
 #?--------------------------------------------------------------------

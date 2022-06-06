@@ -6,7 +6,7 @@
     <style>
         body {
             margin: 0px;
-            font-family: sans-serif;
+            font-family:'Dosis', sans-serif;
         }
 
 
@@ -22,24 +22,24 @@
             font-weight: bold;
             color: black;
         }
-        
+    
         #logo {
             left: 10px;
             border: none;
-            height: 7vh;
-            width: 10%;
-        }
+            height: 10vh;
+            width: 12%;
+        } 
         
         #logo img{
             border: none;
-            height: 7vh;
+            height: 10vh;
             width: 100%;
         }
 
         #name {
             position: absolute;
             font-size: 3vh;
-            right: 9vw;
+            right: 12vw;
         }
         #points {
             position: absolute;
@@ -90,7 +90,7 @@
         }
         #main div:hover img{
             transform: scale(1.2);
-            opacity: .5;
+            opacity: .3;
         }
         
         #main div:hover p{
@@ -114,7 +114,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 90px;
+            font-size: 30px;
             margin: 0px;
         }
         #main a, a:hover, a:visited, a:active {
@@ -131,20 +131,20 @@
 
 <body>
     <div id="top">
-        <a href="/logout" id="logout"> Logout</a>
-        <p id="name">Benvenuto {{username}}!</p>
-        <p id="points">{{points}}</p>
-        <a href="/home" id="logo"><img src="/static/img/logo2.png" alt="logo"></a>
+        <a href="{{link}}" id="logout"> {{scritta}}</a>
+        <p id="name">Benvenuto {{username}}</p>
+        <p id="points">{{points}}pt.</p>
+        <a href="/home" id="logo"><img src="/static/img/logo1.png" alt="logo"></a>
     </div>
     <div id="main">
         <div>
-            <a href="/info"> <img src="static/img/lente.jpg" alt="Img1" id="img1"> <p id="txt1">Informazioni</p> </a>
+            <a href="/info"> <img src="static/img/lente.jpg" alt="Img1" id="img1"> <p id="txt1">Non smettere mai di imparare, clicca su un regione a tua scelta e acquisisci nuove infomazioni.</p> </a>
         </div>
         <div>
-            <a href="/quiz"> <img src="/static/img/punto.png" alt="Img2" id="img2"> <p id="txt2">Quiz</p> </a>
+            <a href="/quiz"> <img src="/static/img/punto.png" alt="Img2" id="img2"> <p id="txt2">Metti alla prova le tue conoscenze, sai rispondere a tutte le domande?</p> </a>
         </div>
         <div id="center">
-            <a href="/game" > <img src="static/img/mondo.png" alt="Img3" id="img3"> <p id="txt3">Minigioco</p> </a>
+            <a href="/game" > <img src="static/img/mondo.png" alt="Img3" id="img3"> <p id="txt3">Divertiti, trova la posizione corretta dello stato o della provincia sulla mappa interattiva.</p> </a>
         </div>
     </div>
 </body>

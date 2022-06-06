@@ -30,20 +30,20 @@
         #logo {
             left: 10px;
             border: none;
-            height: 7vh;
-            width: 10%;
-        }
+            height: 10vh;
+            width: 12%;
+        } 
         
         #logo img{
             border: none;
-            height: 7vh;
+            height: 10vh;
             width: 100%;
         }
 
         #name {
             position: absolute;
             font-size: 3vh;
-            right: 9vw;
+            right: 12vw;
         }
         
         #logout {
@@ -121,14 +121,17 @@
             color: inherit;
             text-decoration: none;
         }
+            #logout:hover{
+            color: #4895ef;
+        }
     </style>
 </head>
 <body>
     <div id="top">
         <a href="/logout" id="logout"> Logout</a>
-        <p id="name">Benvenuto {{username}}!</p>
-        <p id="points">{{points}}</p>
-        <a href="/home" id="logo"><img src="/static/img/logo2.png" alt="logo"></a>
+        <p id="name">Benvenuto {{username}}</p>
+        <p id="points">{{points}}pt.</p>
+        <a href="/home" id="logo"><img src="/static/img/logo1.png" alt="logo"></a>
     </div>
     <div id="main">
         <div>

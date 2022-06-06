@@ -1,184 +1,126 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            body{
-              margin:0%;
-              font-family: sans-serif;
-            }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            font-family:'Dosis', sans-serif;
+        }
+
+        body{
+            background-image: url('/static/img/SfondoLogReg.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
 
 
-
-            ul {
-              list-style-type: none;
-              margin: 0;
-              padding: 0;
-              overflow: hidden;
-              background-color: #090d0c;
-              position: fixed;
-              top: 0;
-              width: 100%;
-              z-index: 1;
-            }
-
-            li {
-              float: left;
-            }
-
-            li a {
-              display: block;
-              color: white;
-              text-align: center;
-              padding: 14px 16px;
-              text-decoration: none;
-            }
-
-            li a:hover:not(.active) {
-              background-color: rgb(31, 30, 30);
-            }
-
-            .active {
-              background-color: #04AA6D;
-            }
-
-
-
-            #centerhome{
-              position: absolute;
-              left: 50%;
-              top: 50%;
-              transform: translate(-50%,-50%);
-            }
-
-            #logo{
-              position: absolute;
-              left: 59%;
-              top: 37%;
-              transform: translate(-50%,-50%);
-            }
-
-            #bottone{
-              background-color: #04AA6D;
-              margin-top: 10px;
-              border-radius: 10px;
-              height: 5vh;
-              width: 7vw;
-              font-size: 20px;
-              font-weight: bold;
-              position: absolute;
-              left: 50%;
-              top: 55%;
-              transform: translate(-50%,-50%);
-              transition-duration: 300ms;
-          }
-          #bottone:hover{
-              background-color: #4895ef;
-              color: white;
-              cursor: pointer;
-          }
-
-          .img_div{
-            width: calc(100% - 60px);
-            height: 32%; 
-            padding: 2%;
-            background-color: #35633e;
-            border: 1px solid black;
-          }
-
-          .img {
-            width: 30vw;
-            height: 30vh;
-            margin-right: 0px;
-            border: 2px solid rgb(83, 83, 83);
-            border-radius: 20px;
-            transition: transform .2s;
-            margin: 0px;
-          }
-
-          #img_right{
-            position: absolute;
-            right: 2%;
-            background-color: white;
-          }
-          #frase{
-            text-align: center;
-          }
-
-          #txt1{
-            width: 30%;
-            position: absolute;
-            right: 20%;
-            top: 110%;
-            color: white;
-          }
-          #txt2{
-            width: 30%;
-            position: absolute;
-            left: 20%;
-            top: 150%;
-            color: white;
-          }
-
-          #txt3{
-            width: 30%;
-            position: absolute;
-            right: 20%;
-            top: 190%;
-            color: white;
-          }
-
-          #contatti{
+        .container {
             width: 100%;
-            height: 20%;
-            background-color: #090d0c;
-          }
+            height: 100vh;
+            background-position: center;
+            background-size: cover;
+            overflow: hidden;
+            position: relative;
 
-            </style>
-    </head>
+        }
 
-    <body>
+        .banner{
+            width: 100%;
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            text-align: center;
+        }
 
-       <div >
-          <ul>
-            <li><a class="active" href="#home">Home</a></li>
-            <li><a href="#img_high">Modalità</a></li>
-          </ul>
-      </div>
 
-      <div id="home">
-        <img src="/static/img/SfondoLogReg.jpg" alt="immagine" style="width:100%; height: 100%;">
-        <div id="centerhome">
-          <h2 id="frase">IMPARA, METTITI ALLA PROVA E GIOCA</h2> 
+        .banner p{
+            font-size: 50px;
+            font-weight: 300;
+            color: rgb(0, 0, 0);
+            margin-bottom: 20px;
+            animation-name: moveToRight;
+            animation-duration: 2s;
+        }
+
+        .banner button{
+            width: 180px;
+            padding: 12px;
+            margin: 20px;
+            border: 2px solid #eee;
+            color: black;
+            border-radius: 50px;
+            font-size: 18px;
+            outline: none;
+            letter-spacing: 1px;
+            cursor: pointer;
+
+        }
+
+        .btn_left{
+            background-color: #eee;
+            color: #444;
+        }
+
+        .btn_right{
+            background-color: transparent;
+            color: #eee;
+        }
+
+        #logo{
+            width: 15%;
+            height: 3%;
+            animation-name: moveToLeft;
+            animation-duration: 2s;
+        }
+
+        @keyframes moveToLeft{
+            0%{
+                transform: translateX(120px);
+                opacity: 0;
+            }
+            100%{
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes moveToRight{
+            0%{
+                transform: translateX(-120px);
+                opacity: 0;
+            }
+            100%{
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .btn_left:hover{
+            background-color: #3a723c;
+        }
+
+        .btn_right:hover{
+            border: 2px solid #3a723c;
+        }
+
+    </style>
+  </head>
+  <body>
+    <div class="conteiner">
+        <div class="banner">
+            <img src="static/img/logo1.png" alt="logo" id="logo">
+            <p>Apprendi, mettiti alla prova, divertiti</p>
+            <button type="button" class="btn_left" onclick="window.location.href='/home'">Esplora</button>
+            <button type="button" class="btn_right" onclick="window.location.href='/login'">Login</button>
 
         </div>
-
-        <div id="logo">
-          <img src="/static/img/logo1.png" alt="logo" style="width:50%;height:30%">
-        </div>
-
-        <a href="/home" ><button id="bottone">Inizia</button></a>
-
-      </div>
-
-      <div class="img_div">
-        <a href="/home"> <img src="static/img/lente.jpg" alt="Img1" class="img" id="img_high" >  </a>
-        <h1 id="txt1">Non smettere mai di imparare, clicca su un regione a tua scelta e acquisisci nuove infomazioni.</h1>
-      </div>
-      
-      <div class="img_div"> 
-          <a href="/home"> <img src="/static/img/punto.png" alt="Img2" class="img" id="img_right">  </a>
-          <h1 id="txt2">Metti alla prova le tue conoscenze, sai rispondere a tutte le domande?</h1>
-      </div>
-      
-      <div class="img_div">
-        <a href="/home" > <img src="static/img/mondo.png" alt="Img3" class="img" >  </a>
-        <h1 id="txt3">Divertiti, trova la posizione esatta sulla cartina di uno stato o di una provincia generata casualmente.</h2>
-      </div>
-      
-
-      <div id="contatti">
-
-      </div>
-
-    </body>
-
+    </div>
+  </body>
 </html>

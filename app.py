@@ -231,7 +231,7 @@ def gamemondo():
         return redirect(url_for('login'))
 
     # GENERAZIONE CASUALE DI UN PAESE
-    rndpaese = rnd.randrange(len(mondo)-1)
+    rndpaese = rnd.randrange(len(mondo))
     rndpaese = mondo[mondo.index == rndpaese].name.to_string(index=False)
 
     # CREAZIONE DELLA MAPPA FOLIUM 
@@ -286,7 +286,7 @@ def conferma_mondo():
 def gameprovince():
     if not session.get('username'):
         return redirect(url_for('login'))
-    rndprov = rnd.randrange(len(province)-1)
+    rndprov = rnd.randrange(len(province))
     rndprov = province[province.index == rndprov].DEN_UTS.to_string(index=False)
     
     # CREAZIONE DELLA MAPPA FOLIUM 

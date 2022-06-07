@@ -102,6 +102,7 @@ def logout():
 
 @app.route("/home", methods=["GET"])
 def home():
+    # RIPRISTINO DELLE SESSIONI RIGUARDANTI IL QUIZ
     session["lista"] = []
     session["contatore"] = 1
     session["giuste"] = 0 
@@ -125,8 +126,6 @@ def home():
 
 # ROUTE RICERCA INFORMAZIONI ROUTE RICERCA INFORMAZIONI
 # ROUTE RICERCA INFORMAZIONI ROUTE RICERCA INFORMAZIONI
-
-
 
 @app.route("/info", methods=["GET"])
 def info():
@@ -156,7 +155,7 @@ def info():
     return render_template("mapit.html",map=folinfo._repr_html_(),username = session['username'],points = session['points'])
 
 
-
+# INFORMAZIONI RIGUARDANTI LA REGIONE SELEZIONATA DALL'UTENTE
 @app.route("/info/<regione>", methods=["GET"])
 def inforeg(regione):
     if not session.get('username'):
@@ -164,6 +163,7 @@ def inforeg(regione):
 
     session["reg"] = regione
     session["regioneUtente"] = regioni[regioni["DEN_REG"] == session["reg"]]
+    # AREA DELLA REGIONE
     area = round(session["regioneUtente"]["Shape_Area"] / 10**9,3)
     session["province_reg"] = province[province.within(session["regioneUtente"].geometry.squeeze())]
 
@@ -244,7 +244,7 @@ def gamemondo():
         # CONVERTE IN JSON
         geo_j = sim_geo.to_json()
         geo_j = folium.GeoJson(data=geo_j)
-        # INSERISCE NEL POPUP UN BOTTONE E UN INPUT DI TIPO HIDDEN PER PASSARE IL VALORI SENZA CHE SI VEDANO 
+        # INSERISCE NEL POPUP UN BOTTONE E UN INPUT DI TIPO HIDDEN PER PASSARE IL VALORI SENZA CHE SIANO VISIBILI
         folium.Popup(f"<form action='/game/mondo/conferma' method='POST'> <input type='hidden' name='paese' value='{r['name']}' > <input type='hidden' name='random' value='{rndpaese}' > <input type='submit' value='Conferma' style='font-family: sans-serif;border-radius: 10px;height: 35px;width: 100px;font-size: 18px;font-weight: bold;'> </form>"
         ).add_to(geo_j)
         # AGGIUNGE TUTTO ALLA MAPPA
@@ -262,7 +262,7 @@ def conferma_mondo():
     risultato = "No, la risposta è sbagliata"
     immagine = "/static/img/errore.png"
 
-    
+    # CONTROLLA CHE LO STATO SELEZIONATO SIA QUELLO DELLA DOMANDA 
     if paese == random:
         risultato = "La risposta è corretta"
         
@@ -292,29 +292,34 @@ def gameprovince():
     # CREAZIONE DELLA MAPPA FOLIUM 
     folprov = folium.Map(location=[41,12], zoom_start=6.4, max_bounds=True, tiles='stamenwatercolor')
     
-
+    # ENTRA NEL DATAFRAME DELLE PROVINCE
     for _, r in province.iterrows():
+        # CREA UNA GEOSERIES SEMPLIFICANDO LE GEOMETRIE
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0000000000000000000000000000000000000000000000001)
+        # CONVERTE IN JSON
         geo_j = sim_geo.to_json()
         geo_j = folium.GeoJson(data=geo_j)
+        # INSERISCE NEL POPUP UN BOTTONE E UN INPUT DI TIPO HIDDEN PER PASSARE IL VALORI SENZA CHE SIANO VISIBILI
         folium.Popup(f"<form action='/game/province/conferma' method='POST'> <input type='hidden' name='provincia' value='{r['DEN_UTS']}' > <input type='hidden' name='random' value='{rndprov}' > <input type='submit' value='Conferma' style='font-family: sans-serif;border-radius: 10px;height: 35px;width: 100px;font-size: 18px;font-weight: bold;'> </form>"
         ).add_to(geo_j)
+        # AGGIUNGE TUTTO ALLA MAPPA
         geo_j.add_to(folprov)
 
     return render_template("game.html",titolo = "MINIGIOCO SULLE PROVINCE" , map = folprov._repr_html_(), indovina = "Trova la provincia:", rndnome = rndprov,username = session['username'],points = session['points'])
 
+# CONTROLLO DELLA RISPOSTA DELL'UTENTE
 @app.route("/game/province/conferma", methods=["POST"])
 def conferma_province():
     if not session.get('username'):
         return redirect(url_for('login'))
     provincia = request.form["provincia"]
-    print(provincia)
     random = request.form["random"]
     risultato = "No, la risposta è sbagliata"
     immagine = "/static/img/errore.png"
+    # CONTROLLA CHE LA PROVINCIA SELEZIONATA SIA QUELLA DELLA DOMANDA 
     if provincia == random:
         risultato = "La risposta è corretta"
-
+        # AGGIUNTA DEI PUNTI 
         session['points'] += 50
         credenziali.loc[credenziali[credenziali['Username']==session['username']].index,'Points'] = session['points']
         credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  

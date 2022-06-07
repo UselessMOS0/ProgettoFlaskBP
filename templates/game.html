@@ -76,6 +76,10 @@
             #logout:hover{
                 color: #4895ef;
             }
+
+        #paese{
+            font-size: 25px;
+        }
     </style>
 </head>
 <body>
@@ -85,7 +89,7 @@
         <p id="points">{{points}}pt.</p>
         <a href="/home" id="logo"><img src="/static/img/logo1.png" alt="logo"></a>
     </div>
-    <h1>{{titolo}}</h1> <h1>{{indovina}} {{rndnome}}</h1>
+    <h1>{{titolo}}</h1> <p id="paese">{{indovina}} <b>{{rndnome}}</b></p>
     <div id="map"> 
         {{map|safe}}
     </div>

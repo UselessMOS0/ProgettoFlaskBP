@@ -250,7 +250,7 @@ def gamemondo():
         # AGGIUNGE TUTTO ALLA MAPPA
         geo_j.add_to(folmondo)
 
-    return render_template("game.html",titolo = "MINIGIOCO SUGLI STATI DEL MONDO" , map = folmondo._repr_html_(),indovina = "Indovina lo stato:" , rndnome = rndpaese,username = session['username'],points = session['points'])
+    return render_template("game.html",titolo = "MINIGIOCO SUGLI STATI DEL MONDO" , map = folmondo._repr_html_(),indovina = "Trova lo stato:" , rndnome = rndpaese,username = session['username'],points = session['points'])
 
 # CONTROLLO DELLA RISPOSTA DELL'UTENTE
 @app.route("/game/mondo/conferma", methods=["POST"])
@@ -301,7 +301,7 @@ def gameprovince():
         ).add_to(geo_j)
         geo_j.add_to(folprov)
 
-    return render_template("game.html",titolo = "MINIGIOCO SULLE PROVINCE" , map = folprov._repr_html_(), indovina = "Indovina la provincia:", rndnome = rndprov,username = session['username'],points = session['points'])
+    return render_template("game.html",titolo = "MINIGIOCO SULLE PROVINCE" , map = folprov._repr_html_(), indovina = "Trova la provincia:", rndnome = rndprov,username = session['username'],points = session['points'])
 
 @app.route("/game/province/conferma", methods=["POST"])
 def conferma_province():

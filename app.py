@@ -168,8 +168,8 @@ def inforeg(regione):
     session["province_reg"] = province[province.within(session["regioneUtente"].geometry.squeeze())]
 
     popolazione_reg = popolazione[popolazione["Regione"] == session["reg"]]
-    covid_reg = covid[covid["denominazione_regione"] == session["reg"]]
-    return render_template("info.html", regione=regione, area=area.values[0] ,province=session["province_reg"]['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = covid_reg["casi_testati"].values[0],username = session['username'],points = session['points'])
+    session["covid_reg"] = covid[covid["denominazione_regione"] == session["reg"]]
+    return render_template("info.html", regione=regione, area=area.values[0] ,province=session["province_reg"]['DEN_UTS'].tolist(), popolazione = popolazione_reg["Popolazione_totale"].values[0], covid = session["covid_reg"]["totale_positivi_test_molecolare"].values[0],username = session['username'],points = session['points'])
 
 # CREAZIONE MAPPA DELLA REGIONE CLICCATA DALL'UTENTE
 @app.route("/regione.png", methods=["GET"])
@@ -201,8 +201,8 @@ def grafici_png():
 
     # CREAZIONE GRAFICO CASI COVID PER REGIONE 
     ax2.set_title('Covid')
-    posizione_cov = covid[covid["denominazione_regione"] == session["reg"]].index.values[0]
-    ax2.bar(covid["denominazione_regione"], covid["casi_testati"])[posizione_cov].set_color("r")
+    posizione_cov = session["covid_reg"][session["covid_reg"]["denominazione_regione"] == session["reg"]].index.values[0]
+    ax2.bar(covid["denominazione_regione"], covid["totale_positivi_test_molecolare"])[posizione_cov].set_color("r")
 
     fig.autofmt_xdate(rotation=45)
     

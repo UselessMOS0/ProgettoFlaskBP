@@ -73,24 +73,6 @@
             text-align: center;
         }
         
-        #bottone{
-                background-color: #04AA6D;
-                margin-top: 37%;
-                border-radius: 10px;
-                height: 5vh;
-                width: 7vw;
-                font-size: 20px;
-                right: 5%;
-                font-weight: bold;
-                position: absolute;
-                transform: translate(-50%,-50%);
-                transition-duration: 300ms;
-            }
-            #bottone:hover{
-                background-color: #4895ef;
-                color: white;
-                cursor: pointer;
-            }
             #logout:hover{
                 color: #4895ef;
             }
@@ -98,7 +80,7 @@
 </head>
 <body>
     <div id="top">
-        <a href="/logout" id="logout"> Logout</a>
+        <a href="/home" id="logout">Home</a>
         <p id="name">Benvenuto {{username}}</p>
         <p id="points">{{points}}pt.</p>
         <a href="/home" id="logo"><img src="/static/img/logo1.png" alt="logo"></a>
@@ -107,5 +89,5 @@
     <div id="map"> 
         {{map|safe}}
     </div>
-    <a href="/home"><button id="bottone">Home</button></a>
+    
 </body>

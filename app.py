@@ -17,8 +17,7 @@ import matplotlib.pyplot as plt
 import folium
 import random as rnd
 
-#! ROUTE DEL LOGIN E DELLA REGISTRAZIONE ROUTE DEL LOGIN E DELLA REGISTRAZIONE 
-#! ROUTE DEL LOGIN E DELLA REGISTRAZIONE ROUTE DEL LOGIN E DELLA REGISTRAZIONE 
+
 
 credenziali = pd.read_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv')
 mondo =  gpd.read_file(gpd.datasets.get_path('naturalearth_lowres')).to_crs(epsg=4326)
@@ -79,6 +78,7 @@ def registrazione():
         else:
             # SALVATAGGIO DEI DATI NEL FILE CSV
             utente = {"Email":email,"Username": username,"Password":password,"Points":'0'}
+            credenziali = pd.read_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv')
             credenziali = credenziali.append(utente,ignore_index=True)    
             credenziali.to_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv',index=False)  
             return redirect(url_for('login'))
@@ -92,7 +92,7 @@ def registrazione():
 @app.route("/logout")
 def logout():
     session["username"] = None
-    return redirect(url_for('home'))
+    return redirect(url_for('home_page'))
 
 #!--------------------------------------------------------------------
 #!--------------------------------------------------------------------
@@ -108,7 +108,7 @@ def home():
     session["sbagliate"] = 0 
 
     if not session.get('username'):
-        return render_template("home.html", link="/login", scritta="Login")
+        return render_template("home.html", link="/login", scritta="Login", pt="")
 
 
     credenziali = pd.read_csv('/workspace/ProgettoFlaskBP/static/Files/credenziali.csv')
@@ -117,7 +117,7 @@ def home():
         if session['username'] == c.Username:
             session['points'] = int(c.Points)
 
-    return render_template("home.html",username = session['username'],points = session['points'], link="/logout", scritta="Logout")
+    return render_template("home.html",username = session['username'],points = session['points'], link="/logout", scritta="Logout", pt="pt.")
 
 #?--------------------------------------------------------------------
 #?--------------------------------------------------------------------
@@ -136,15 +136,21 @@ def info():
     # CREAZIONE DELLA MAPPA FOLIUM
     folinfo = folium.Map(location=[41,12], max_bounds=True, zoom_start=7 , min_zoom=4)
     
-
+    # ENTRA NEL DATAFRAME DELLE REGIONI
     for _, r in regioni.iterrows():
+        # URL DELLA DELLA REGIONE E LO TRASFORMA
         url = str(url_for("inforeg", regione=r['DEN_REG']))
+        # CREA UNA GEOSERIES SEMPLICANDO LE GEOMETRIE
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0000000000000000000000000000000000000000000000001)
+        # LO TRASFORMA IN UN JSON
         geo_j = sim_geo.to_json()
+        # AGGIUNGE LO STILE
         geo_j = folium.GeoJson(data=geo_j,
                         style_function=lambda x: {'fillColor': 'orange'})
+        # INSERISCE NEL POPUP IL LINK DI OGNI REGIONE
         folium.Popup(f"<a href={url}>{r['DEN_REG']}</a>"
         ).add_to(geo_j)
+        # AGGIUNGE TUTTO ALLA MAPPA
         geo_j.add_to(folinfo)
     
     return render_template("mapit.html",map=folinfo._repr_html_(),username = session['username'],points = session['points'])
@@ -231,13 +237,17 @@ def gamemondo():
     # CREAZIONE DELLA MAPPA FOLIUM 
     folmondo = folium.Map(location=[19.14,-12.56], max_bounds=True, zoom_start=3 , min_zoom=2.8, tiles='stamenwatercolor')
     
-
+    # ENTRA NEL DATAFRAME DEGLI STATI 
     for _, r in mondo.iterrows():
+        # CREA UNA GEOSERIES SEMPLIFICANDO LE GEOMETRIE
         sim_geo = gpd.GeoSeries(r['geometry']).simplify(tolerance=0.0000000000000000000000000000000000000000000000001)
+        # CONVERTE IN JSON
         geo_j = sim_geo.to_json()
         geo_j = folium.GeoJson(data=geo_j)
+        # INSERISCE NEL POPUP UN BOTTONE E UN INPUT DI TIPO HIDDEN PER PASSARE IL VALORI SENZA CHE SI VEDANO 
         folium.Popup(f"<form action='/game/mondo/conferma' method='POST'> <input type='hidden' name='paese' value='{r['name']}' > <input type='hidden' name='random' value='{rndpaese}' > <input type='submit' value='Conferma' style='font-family: sans-serif;border-radius: 10px;height: 35px;width: 100px;font-size: 18px;font-weight: bold;'> </form>"
         ).add_to(geo_j)
+        # AGGIUNGE TUTTO ALLA MAPPA
         geo_j.add_to(folmondo)
 
     return render_template("game.html",titolo = "MINIGIOCO SUGLI STATI DEL MONDO" , map = folmondo._repr_html_(),indovina = "Indovina lo stato:" , rndnome = rndpaese,username = session['username'],points = session['points'])
